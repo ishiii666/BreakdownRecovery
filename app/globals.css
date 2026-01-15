@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --foreground-rgb: 15, 23, 42;
+  /* Slate 900 */
+  --background-start-rgb: 248, 250, 252;
+  /* Slate 50 */
+  --background-end-rgb: 255, 255, 255;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+.container-custom {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.premium-gradient {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+}
+
+.hover-3d {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hover-3d:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(2deg) translateY(-8px);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
