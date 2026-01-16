@@ -11,28 +11,24 @@ const BREAKDOWN_IMG = "/images/breakdown_recovery_service.png";
 
 const steps = [
     {
-        icon: <MapPin className="w-10 h-10" />,
-        title: "Share Location",
-        desc: "Send your exact spot via phone or postcode search for instant dispatch.",
-        color: "from-blue-500 to-blue-600"
+        image: "/images/step-1.png",
+        title: "Send Your Location",
+        desc: "Share your exact spot via phone or postcode search."
     },
     {
-        icon: <Search className="w-10 h-10" />,
-        title: "Technician Match",
-        desc: "Our closest technician is selected to ensure the fastest arrival time.",
-        color: "from-orange-500 to-orange-600"
+        image: "/images/step-2.png",
+        title: "Arrival From 30 Minutes",
+        desc: "Our closest technician is dispatched immediately."
     },
     {
-        icon: <ShieldCheck className="w-10 h-10" />,
-        title: "Health Check",
-        desc: "On-site assessment to determine the best course of action for your vehicle.",
-        color: "from-emerald-500 to-emerald-600"
+        image: "/images/step-3.png",
+        title: "Vehicle Health Check",
+        desc: "Professional assessment of your vehicle's issue."
     },
     {
-        icon: <Truck className="w-10 h-10" />,
-        title: "Safe Recovery",
-        desc: "Professional on-site repair or secure towing to your preferred destination.",
-        color: "from-indigo-500 to-indigo-600"
+        image: "/images/step-4.png",
+        title: "Vehicle Recovery / Service",
+        desc: "On-site repair or safe recovery to your destination."
     }
 ];
 
@@ -73,44 +69,57 @@ export default function Services() {
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full -ml-60 -mb-60" />
 
                 <div className="container-custom relative z-10">
-                    <div className="max-w-3xl mx-auto text-center mb-20">
+                    <div className="max-w-3xl mx-auto text-center mb-24">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-brand-primary text-xs font-black uppercase tracking-widest mb-6"
+                            className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.4em] mb-6"
                         >
-                            Streamlined Service
+                            Streamlined Service Dispatch
                         </motion.div>
-                        <h2 className="text-4xl md:text-6xl font-black mb-6 font-premium">
-                            Recovery in <span className="gold-text-gradient">4 Steps</span>
+                        <h2 className="text-4xl md:text-6xl font-black mb-8 leading-tight">
+                            Emergency Recovery in <span className="text-brand-primary">4 Easy Steps</span>
                         </h2>
-                        <p className="text-white/60 text-lg font-medium leading-relaxed">
-                            We've optimized every second of our process to get you back on the road faster than anyone else.
-                        </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative items-stretch">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
                         {steps.map((step, idx) => (
                             <motion.div
                                 key={idx}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 40 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: idx * 0.1 }}
-                                className="relative group h-full"
+                                transition={{ delay: idx * 0.1, duration: 0.8, ease: "circOut" }}
+                                className="flex flex-col items-center text-center"
                             >
-
-
-                                <div className="relative z-10 p-8 rounded-[40px] bg-white/5 border border-white/10 hover:bg-white/[0.08] transition-all duration-500 h-full flex flex-col">
-                                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${step.color} p-5 mb-8 shadow-xl shadow-black/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shrink-0`}>
-                                        {step.icon}
+                                {/* Circle Icon Container */}
+                                <div className="relative mb-10 group">
+                                    <div className="w-40 h-40 md:w-48 md:h-48 rounded-full bg-white flex items-center justify-center p-8 shadow-[0_20px_50px_rgba(255,255,255,0.1)] group-hover:shadow-[0_20px_60px_rgba(59,130,246,0.2)] transition-all duration-700 relative z-10">
+                                        <img
+                                            src={step.image}
+                                            alt={step.title}
+                                            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
+                                        />
                                     </div>
-                                    <div className="absolute top-8 right-8 text-4xl font-black text-white/10 group-hover:text-brand-primary/20 transition-colors">
-                                        0{idx + 1}
+
+                                    {/* Line Connector (Desktop) */}
+                                    {idx < 3 && (
+                                        <div className="hidden lg:block absolute top-1/2 left-[100%] w-[calc(100%-48px)] h-[1px] bg-gradient-to-r from-brand-primary/40 to-transparent -translate-y-1/2 -z-10" />
+                                    )}
+
+                                    {/* Step Number Tag */}
+                                    <div className="absolute top-2 right-2 md:top-4 md:right-4 w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-primary flex items-center justify-center text-white font-black text-xl md:text-2xl shadow-xl z-20 border-4 border-brand-bg-dark">
+                                        {idx + 1}
                                     </div>
-                                    <h3 className="text-2xl font-black mb-4 font-premium">{step.title}</h3>
-                                    <p className="text-white/60 text-sm leading-relaxed font-medium flex-grow">
+
+                                    {/* Pulse Effect */}
+                                    <div className="absolute inset-0 rounded-full bg-brand-primary/20 animate-ping -z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </div>
+
+                                <div className="space-y-4 max-w-[240px]">
+                                    <h3 className="text-xl md:text-2xl font-black">{step.title}</h3>
+                                    <p className="text-white/50 text-sm md:text-base font-medium leading-relaxed">
                                         {step.desc}
                                     </p>
                                 </div>
