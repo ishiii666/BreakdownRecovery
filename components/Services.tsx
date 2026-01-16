@@ -1,25 +1,38 @@
-import { MapPin, Clock, ShieldCheck, Truck, ArrowRight } from 'lucide-react';
+"use client";
+
+import { motion } from "framer-motion";
+import { Truck, Search, ShieldCheck, MapPin, ArrowRight, Gauge, Wrench, Zap } from "lucide-react";
+
+// Generated images
+const JUMPSTART_IMG = "/images/jump_start_service.png";
+const ROADSIDE_IMG = "/images/roadside_repair_service.png";
+const PERFORMANCE_IMG = "/images/performance_towing_service.png";
+const BREAKDOWN_IMG = "/images/breakdown_recovery_service.png";
 
 const steps = [
     {
-        image: "/images/step_location.png",
-        title: "Send Your Location",
-        desc: "Share your exact spot via phone or postcode search."
+        icon: <MapPin className="w-10 h-10" />,
+        title: "Share Location",
+        desc: "Send your exact spot via phone or postcode search for instant dispatch.",
+        color: "from-blue-500 to-blue-600"
     },
     {
-        image: "/images/step_time.png",
-        title: "Arrival From 30 Minutes",
-        desc: "Our closest technician is dispatched immediately."
+        icon: <Search className="w-10 h-10" />,
+        title: "Technician Match",
+        desc: "Our closest technician is selected to ensure the fastest arrival time.",
+        color: "from-orange-500 to-orange-600"
     },
     {
-        image: "/images/step_check.png",
-        title: "Vehicle Health Check",
-        desc: "Professional assessment of your vehicle's issue."
+        icon: <ShieldCheck className="w-10 h-10" />,
+        title: "Health Check",
+        desc: "On-site assessment to determine the best course of action for your vehicle.",
+        color: "from-emerald-500 to-emerald-600"
     },
     {
-        image: "/images/step_truck.png",
-        title: "Vehicle Recovery / Service",
-        desc: "On-site repair or safe recovery to your destination."
+        icon: <Truck className="w-10 h-10" />,
+        title: "Safe Recovery",
+        desc: "Professional on-site repair or secure towing to your preferred destination.",
+        color: "from-indigo-500 to-indigo-600"
     }
 ];
 
@@ -27,119 +40,136 @@ const services = [
     {
         title: "Breakdown Recovery",
         description: "24/7 emergency assistance for all vehicle types. We'll get you and your car home safely.",
-        image: "/images/breakdown.png",
-    },
-    {
-        title: "Mobile Tyre Fitting",
-        description: "Flat tyre? We come to you and replace it on-site, whether at home or on the roadside.",
-        image: "/images/tyres.png",
-    },
-    {
-        title: "Accident Recovery",
-        description: "Safe transportation for damaged vehicles after an incident. We handle insurance logistics too.",
-        image: "/images/accident.png",
+        icon: <Truck className="w-8 h-8" />,
+        image: BREAKDOWN_IMG
     },
     {
         title: "Jump Starts",
         description: "Dead battery? Our team carries professional equipment to get your car started in minutes.",
-        image: "/images/jumpstart.png",
+        icon: <Zap className="w-8 h-8" />,
+        image: JUMPSTART_IMG
+    },
+    {
+        title: "Roadside Repair",
+        description: "Minor issues handled on the spot by our skilled technicians to keep you moving.",
+        icon: <Wrench className="w-8 h-8" />,
+        image: ROADSIDE_IMG
+    },
+    {
+        title: "Performance Towing",
+        description: "Specialized towing for low-clearance or luxury vehicles with ultimate care.",
+        icon: <Gauge className="w-8 h-8" />,
+        image: PERFORMANCE_IMG
     }
 ];
 
 export default function Services() {
     return (
-        <section id="services" className="overflow-hidden">
-            {/* 4-Step Process - Dark Theme Refined */}
-            <div className="py-24 bg-gradient-to-b from-[#0F172A] to-[#0A192F] text-white relative">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        <section id="services" className="bg-brand-bg-light">
+            {/* 4-Step Process - High-End Dark Interactive Section */}
+            <div className="py-24 bg-brand-bg-dark text-white relative overflow-hidden">
+                {/* Abstract background elements */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/10 blur-[120px] rounded-full -mr-80 -mt-80" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 blur-[100px] rounded-full -ml-60 -mb-60" />
 
                 <div className="container-custom relative z-10">
-                    <div className="text-center mb-24">
-                        <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">
-                            Emergency Recovery in <span className="text-[#0088CC]">4 Easy Steps</span>
+                    <div className="max-w-3xl mx-auto text-center mb-20">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-brand-primary text-xs font-black uppercase tracking-widest mb-6"
+                        >
+                            Streamlined Service
+                        </motion.div>
+                        <h2 className="text-4xl md:text-6xl font-black mb-6 font-premium">
+                            Recovery in <span className="gold-text-gradient">4 Steps</span>
                         </h2>
-                        <div className="flex items-center justify-center gap-4">
-                            <div className="h-px w-12 bg-[#0088CC]"></div>
-                            <p className="text-slate-400 text-sm font-black uppercase tracking-[0.4em]">Streamlined Service Dispatch</p>
-                            <div className="h-px w-12 bg-[#0088CC]"></div>
-                        </div>
+                        <p className="text-white/60 text-lg font-medium leading-relaxed">
+                            We've optimized every second of our process to get you back on the road faster than anyone else.
+                        </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-8 relative">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative items-stretch">
                         {steps.map((step, idx) => (
-                            <div key={idx} className="flex flex-col items-center group relative text-center">
-                                {/* Connector Line (Desktop) */}
-                                {idx < steps.length - 1 && (
-                                    <div className="hidden lg:block absolute top-[70px] left-[65%] w-[70%] h-0.5 bg-gradient-to-r from-[#0088CC]/60 to-transparent z-0"></div>
-                                )}
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                                className="relative group h-full"
+                            >
 
-                                {/* Vector Container Refined */}
-                                <div className="relative w-36 h-36 mb-10 z-10">
-                                    <div className="absolute inset-0 bg-[#0088CC]/20 rounded-full blur-2xl group-hover:bg-[#0088CC]/40 transition-all duration-500 animate-pulse"></div>
-                                    <div className="relative w-full h-full bg-white rounded-full p-6 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500 shadow-[0_0_40px_rgba(0,136,204,0.3)] border-4 border-white/10 overflow-hidden">
-                                        <img
-                                            src={step.image}
-                                            alt={step.title}
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
-                                    <div className="absolute -top-1 -right-1 w-12 h-12 bg-[#0088CC] rounded-full flex items-center justify-center font-black text-xl shadow-xl border-4 border-[#0F172A] z-20">
-                                        {idx + 1}
-                                    </div>
-                                </div>
 
-                                <div className="space-y-4 px-4">
-                                    <h3 className="text-2xl font-black group-hover:text-[#0088CC] transition-colors leading-tight">
-                                        {step.title}
-                                    </h3>
-                                    <p className="text-slate-400 font-bold text-sm leading-relaxed max-w-[240px] mx-auto group-hover:text-slate-200 transition-colors">
+                                <div className="relative z-10 p-8 rounded-[40px] bg-white/5 border border-white/10 hover:bg-white/[0.08] transition-all duration-500 h-full flex flex-col">
+                                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${step.color} p-5 mb-8 shadow-xl shadow-black/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shrink-0`}>
+                                        {step.icon}
+                                    </div>
+                                    <div className="absolute top-8 right-8 text-4xl font-black text-white/10 group-hover:text-brand-primary/20 transition-colors">
+                                        0{idx + 1}
+                                    </div>
+                                    <h3 className="text-2xl font-black mb-4 font-premium">{step.title}</h3>
+                                    <p className="text-white/60 text-sm leading-relaxed font-medium flex-grow">
                                         {step.desc}
                                     </p>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            {/* Local Recovery Services - Light Theme */}
-            <div className="py-24 bg-white relative">
+            {/* Local Recovery Services - Refined Light Section */}
+            <div className="py-12 relative overflow-hidden">
                 <div className="container-custom">
-                    <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-100 pb-12">
-                        <div>
-                            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">
-                                Local <span className="text-[#0088CC]">Recovery Services</span>
+                    <div className="flex flex-col lg:flex-row items-end justify-between gap-8 mb-16">
+                        <div className="max-w-2xl">
+                            <span className="text-brand-primary font-black uppercase tracking-widest text-sm block mb-4">Our Expertise</span>
+                            <h2 className="text-4xl md:text-5xl font-black text-brand-bg-dark font-premium">
+                                Comprehensive <br />
+                                <span className="text-slate-400">Recovery Solutions</span>
                             </h2>
-                            <p className="text-slate-500 font-bold text-lg">Reliable help, wherever you are in the UK.</p>
                         </div>
-                        <div className="h-2 w-24 bg-[#0088CC] rounded-full hidden md:block"></div>
+                        <p className="text-slate-600 font-medium text-lg lg:max-w-md lg:text-right">
+                            Tailored services for every roadside emergency. Nationwide coverage with local expertise.
+                        </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {services.map((s, i) => (
-                            <div key={i} className="group bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                                <div className="h-56 relative overflow-hidden">
-                                    <img
-                                        src={s.image}
-                                        alt={s.title}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                                    <div className="absolute bottom-4 left-4">
-                                        <div className="px-3 py-1 bg-[#0088CC] text-white text-[10px] font-black uppercase tracking-widest rounded-full">
-                                            24/7 Available
-                                        </div>
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                whileHover={{ translateY: -12 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="group relative h-[450px] rounded-[48px] overflow-hidden premium-shadow cursor-pointer border border-slate-100/50 hover:border-brand-primary/30 transition-all duration-500"
+                            >
+                                <div className="absolute inset-0 z-[1] border-[8px] border-white/0 group-hover:border-white/5 rounded-[48px] transition-all duration-700 pointer-events-none" />
+                                <img
+                                    src={s.image}
+                                    alt={s.title}
+                                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 ease-out"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-brand-bg-dark via-brand-bg-dark/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+
+                                <div className="absolute inset-0 p-8 flex flex-col justify-end text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <div className="w-14 h-14 rounded-2xl bg-brand-primary flex items-center justify-center mb-6 shadow-2xl shadow-brand-primary/20">
+                                        {s.icon}
                                     </div>
-                                </div>
-                                <div className="p-8">
-                                    <h3 className="text-2xl font-black text-[#0088CC] mb-4 group-hover:translate-x-1 transition-transform">
-                                        {s.title}
-                                    </h3>
-                                    <p className="text-slate-500 text-sm leading-relaxed font-bold">
+                                    <h3 className="text-2xl font-black mb-3 font-premium">{s.title}</h3>
+                                    <p className="text-white/80 text-sm font-medium leading-relaxed mb-6">
                                         {s.description}
                                     </p>
+                                    <div className="flex items-center gap-2 text-brand-primary font-black text-xs uppercase tracking-[0.2em]">
+                                        <span>Secure Booking</span>
+                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                                    </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>

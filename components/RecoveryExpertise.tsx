@@ -1,107 +1,126 @@
-import { Phone, Mail, MessageCircle, Info } from 'lucide-react';
-import { siteDetails } from '@/lib/siteDetails';
+"use client";
+
+import { motion } from "framer-motion";
+import { Headphones, CreditCard, PoundSterling, ClipboardList, Users2, Gauge, CheckCircle2 } from "lucide-react";
+
+const expertiseData = [
+    {
+        icon: <Headphones className="w-8 h-8" />,
+        title: "24/7 Control Room",
+        description: "Expert support staff available around the clock to coordinate your recovery immediately.",
+        color: "bg-blue-500"
+    },
+    {
+        icon: <CreditCard className="w-8 h-8" />,
+        title: "Flexible Payments",
+        description: "We accept all major card payments on-site for a seamless and hassle-free experience.",
+        color: "bg-brand-primary"
+    },
+    {
+        icon: <PoundSterling className="w-8 h-8" />,
+        title: "Transparent Pricing",
+        description: "Competitive rates with no hidden fees. Get a clear quote before we dispatch help.",
+        color: "bg-emerald-500"
+    },
+    {
+        icon: <ClipboardList className="w-8 h-8" />,
+        title: "Full Documentation",
+        description: "Invoices and receipts provided for every service, perfect for insurance or business claims.",
+        color: "bg-purple-500"
+    },
+    {
+        icon: <Users2 className="w-8 h-8" />,
+        title: "Nationwide Network",
+        description: "Access to over 2,000 professional drivers strategically located across the UK.",
+        color: "bg-indigo-500"
+    },
+    {
+        icon: <Gauge className="w-8 h-8" />,
+        title: "Rapid Response",
+        description: "Strategic positioning allows us to maintain an industry-leading 30-minute average response.",
+        color: "bg-red-500"
+    }
+];
 
 export default function RecoveryExpertise() {
     return (
-        <section className="py-24 bg-gradient-to-b from-[#0F172A] to-[#0A192F] relative overflow-hidden text-white">
-            {/* Background Glows for Depth */}
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#0088CC]/10 blur-[130px] rounded-full -mr-64 -mt-64 animate-pulse"></div>
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 blur-[100px] rounded-full -ml-32 -mb-32"></div>
+        <section className="py-12 bg-brand-bg-light relative overflow-hidden">
+            {/* Decorative background */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-primary/5 rounded-full blur-[120px] -mr-48 -mt-48" />
+            <div className="absolute bottom-0 left-0 w-72 h-72 bg-brand-secondary/5 rounded-full blur-[100px] -ml-36 -mb-36" />
 
             <div className="container-custom relative z-10">
-                {/* Header Section */}
-                <div className="flex items-center gap-4 mb-12">
-                    <div className="w-12 h-12 bg-[#FFD700] rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/20">
-                        <div className="w-6 h-6 border-2 border-slate-900 rounded-md"></div>
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-black uppercase tracking-wider leading-none">Your Recovery Services</h2>
-                        <p className="text-slate-400 text-xs font-bold mt-1 uppercase tracking-widest">
-                            Vehicle Recovery • Roadside Assistance • Local & Reliable
-                        </p>
-                    </div>
+                <div className="text-center max-w-3xl mx-auto mb-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-600 font-bold text-sm mb-6"
+                    >
+                        <CheckCircle2 className="w-4 h-4 text-brand-primary" />
+                        <span>Premium Recovery Standards</span>
+                    </motion.div>
+
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="text-4xl md:text-5xl font-black text-brand-bg-dark mb-6"
+                    >
+                        Unrivaled <span className="gold-text-gradient">Expertise</span> in Every Recovery
+                    </motion.h2>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="text-lg text-slate-600 leading-relaxed"
+                    >
+                        We've set the benchmark for roadside assistance in the UK. Discover why thousands trust us every month.
+                    </motion.p>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-8 items-stretch">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {expertiseData.map((item, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 }}
+                            whileHover={{
+                                scale: 1.02,
+                                y: -10,
+                                transition: { duration: 0.3, ease: "easeOut" }
+                            }}
+                            className="relative group p-8 rounded-[40px] bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(249,115,22,0.1)] transition-all duration-500 overflow-hidden"
+                        >
+                            {/* Hover Background Glow */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 rounded-full blur-3xl -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                    {/* Left Card: Info & Tags */}
-                    <div className="lg:col-span-7 bg-white/5 backdrop-blur-md border border-white/10 p-10 md:p-12 rounded-[32px] flex flex-col justify-between">
-                        <div>
-                            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full mb-8">
-                                <span className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse"></span>
-                                <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Fast response. Clear communication.</span>
+                            {/* Decorative Corner Line */}
+                            <div className="absolute top-0 left-0 w-2 h-0 bg-brand-primary group-hover:h-12 transition-all duration-500 rounded-br-lg" />
+                            <div className="absolute top-0 left-0 h-2 w-0 bg-brand-primary group-hover:w-12 transition-all duration-500 rounded-br-lg" />
+
+                            <div className={`relative z-10 w-16 h-16 rounded-2xl ${item.color} text-white flex items-center justify-center mb-8 shadow-xl transform group-hover:scale-110 group-hover:rotate-[8deg] transition-all duration-500`}>
+                                {item.icon}
                             </div>
-                            <h3 className="text-4xl md:text-5xl font-black mb-6 leading-tight tracking-tight">
-                                Recovery support when <br /> you need it.
+
+                            <h3 className="relative z-10 text-2xl font-black text-brand-bg-dark mb-4 group-hover:text-brand-primary transition-colors duration-300">
+                                {item.title}
                             </h3>
-                            <p className="text-slate-400 text-lg font-medium leading-relaxed mb-10 max-w-xl">
-                                We provide dependable vehicle recovery and roadside assistance with a focus on safety, quick turnaround, and straightforward pricing. If you're broken down or need a tow, contact us and we'll get you moving again.
+
+                            <p className="relative z-10 text-slate-500 font-medium leading-relaxed group-hover:text-slate-600 transition-colors duration-300">
+                                {item.description}
                             </p>
-                        </div>
 
-                        <div className="flex flex-wrap gap-3">
-                            {[
-                                "Breakdown recovery",
-                                "Roadside assistance",
-                                "Accident recovery",
-                                "Battery jump / flat tyre",
-                                "Short & long distance"
-                            ].map((tag) => (
-                                <span key={tag} className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-slate-300 hover:bg-white/10 transition-colors cursor-default">
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Right Card: Contact Form/Buttons */}
-                    <div className="lg:col-span-5 bg-white/5 backdrop-blur-md border border-white/10 p-10 md:p-12 rounded-[32px] flex flex-col">
-                        <h3 className="text-2xl font-black mb-3">Contact</h3>
-                        <p className="text-slate-400 font-medium text-sm mb-10">
-                            Call for the fastest response or email for quotes and bookings.
-                        </p>
-
-                        <div className="space-y-4 mb-10">
-                            <a
-                                href={`tel:${siteDetails.phone}`}
-                                className="w-full flex items-center justify-center gap-3 py-4 bg-[#334155]/50 hover:bg-[#334155] border border-white/10 rounded-2xl transition-all group"
-                            >
-                                <Phone className="w-5 h-5 text-slate-400 group-hover:text-[#FFD700] transition-colors" />
-                                <span className="font-bold text-slate-200 uppercase tracking-wider text-sm">Call: {siteDetails.phone}</span>
-                            </a>
-
-                            <a
-                                href={`mailto:${siteDetails.email}`}
-                                className="w-full flex items-center justify-center gap-3 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all group"
-                            >
-                                <Mail className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
-                                <span className="font-bold text-slate-200 uppercase tracking-wider text-sm">Email: {siteDetails.email}</span>
-                            </a>
-
-                            <a
-                                href={`https://wa.me/${siteDetails.whatsapp}`}
-                                className="w-full flex items-center justify-center gap-3 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all group"
-                            >
-                                <MessageCircle className="w-5 h-5 text-slate-400 group-hover:text-[#25D366] transition-colors" />
-                                <span className="font-bold text-slate-200 uppercase tracking-wider text-sm">Message on WhatsApp</span>
-                            </a>
-                        </div>
-
-                        <div className="mt-auto pt-8 border-t border-white/10">
-                            <div className="flex gap-4 items-start">
-                                <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
-                                    <Info className="w-4 h-4" />
-                                </div>
-                                <div>
-                                    <p className="text-xs font-black uppercase text-slate-300 tracking-wider mb-1">Service area:</p>
-                                    <p className="text-xs text-slate-400 font-medium leading-relaxed">
-                                        London, Manchester, Birmingham, Leeds, Glasgow, and surrounding areas nationwide.
-                                    </p>
-                                </div>
+                            <div className="absolute bottom-8 right-8 w-10 h-10 rounded-full border border-brand-primary/10 flex items-center justify-center text-brand-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all duration-500">
+                                <CheckCircle2 className="w-5 h-5" />
                             </div>
-                        </div>
-                    </div>
-
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </section>

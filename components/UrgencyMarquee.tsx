@@ -1,39 +1,51 @@
-'use client';
+"use client";
 
-import { siteDetails } from '@/lib/siteDetails';
-import { Phone, Clock } from 'lucide-react';
+import { motion } from "framer-motion";
+import { siteDetails } from "@/lib/siteDetails";
+import { Phone, Clock, AlertTriangle, Zap } from "lucide-react";
 
 export default function UrgencyMarquee() {
+    const items = [
+        { icon: <Clock className="w-5 h-5" />, text: "30-MINUTE ARRIVAL TIME" },
+        { icon: <Zap className="w-5 h-5" />, text: "24/7 EMERGENCY DISPATCH" },
+        { icon: <Phone className="w-5 h-5" />, text: `CALL NOW: ${siteDetails.phone}` },
+        { icon: <AlertTriangle className="w-5 h-5" />, text: "NATIONWIDE RECOVERY" }
+    ];
+
     return (
-        <div className="bg-[#0088CC] overflow-hidden py-4 border-y border-white/10">
-            <div className="whitespace-nowrap animate-marquee flex items-center gap-12">
-                {[...Array(10)].map((_, i) => (
-                    <div key={i} className="flex items-center gap-10">
-                        <div className="flex items-center gap-3">
-                            <Clock className="w-6 h-6 fill-white text-white animate-pulse" />
-                            <span className="text-xl font-black uppercase tracking-tight text-white">Arrival From 30 Minutes</span>
+        <div className="bg-brand-bg-dark border-y border-white/5 py-6 overflow-hidden relative">
+            <div className="flex whitespace-nowrap">
+                <motion.div
+                    animate={{ x: [0, -1000] }}
+                    transition={{
+                        x: {
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 30,
+                            ease: "linear",
+                        },
+                    }}
+                    className="flex items-center gap-12"
+                >
+                    {Array.from({ length: 10 }).map((_, i) => (
+                        <div key={i} className="flex items-center gap-12">
+                            {items.map((item, idx) => (
+                                <div key={idx} className="flex items-center gap-6">
+                                    <div className="flex items-center gap-3 text-brand-primary">
+                                        {item.icon}
+                                        <span className="text-lg font-black uppercase tracking-[0.2em]">{item.text}</span>
+                                    </div>
+                                    <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                                </div>
+                            ))}
                         </div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-white/30" />
-                        <div className="flex items-center gap-3">
-                            <Phone className="w-6 h-6 fill-white text-white animate-pulse" />
-                            <span className="text-xl font-black uppercase tracking-tight text-white">Call: {siteDetails.phone}</span>
-                        </div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-white/30" />
-                    </div>
-                ))}
+                    ))}
+                </motion.div>
             </div>
 
-            <style jsx>{`
-                @keyframes marquee {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
-                }
-                .animate-marquee {
-                    display: inline-flex;
-                    animation: marquee 60s linear infinite;
-                    min-width: 200%;
-                }
-            `}</style>
+            {/* Side gradients to soften transition */}
+            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-brand-bg-dark to-transparent z-10" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-brand-bg-dark to-transparent z-10" />
         </div>
     );
 }
