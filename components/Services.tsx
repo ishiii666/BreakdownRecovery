@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Truck, Search, ShieldCheck, MapPin, ArrowRight, Gauge, Wrench, Zap } from "lucide-react";
+import Link from 'next/link';
 
 // Generated images
 const JUMPSTART_IMG = "/images/jump_start_service.png";
@@ -35,24 +36,28 @@ const steps = [
 const services = [
     {
         title: "Breakdown Recovery",
+        slug: "breakdown-recovery",
         description: "24/7 emergency assistance for all vehicle types. We'll get you and your car home safely.",
         icon: <Truck className="w-8 h-8" />,
         image: BREAKDOWN_IMG
     },
     {
         title: "Jump Starts",
+        slug: "jump-starts",
         description: "Dead battery? Our team carries professional equipment to get your car started in minutes.",
         icon: <Zap className="w-8 h-8" />,
         image: JUMPSTART_IMG
     },
     {
         title: "Roadside Repair",
+        slug: "roadside-repair",
         description: "Minor issues handled on the spot by our skilled technicians to keep you moving.",
         icon: <Wrench className="w-8 h-8" />,
         image: ROADSIDE_IMG
     },
     {
         title: "Performance Towing",
+        slug: "vehicle-towing",
         description: "Specialized towing for low-clearance or luxury vehicles with ultimate care.",
         icon: <Gauge className="w-8 h-8" />,
         image: PERFORMANCE_IMG
@@ -173,10 +178,13 @@ export default function Services() {
                                     <p className="text-white/80 text-sm font-medium leading-relaxed mb-6">
                                         {s.description}
                                     </p>
-                                    <div className="flex items-center gap-2 text-brand-primary font-black text-xs uppercase tracking-[0.2em]">
+                                    <Link
+                                        href={`/services/${s.slug}`}
+                                        className="flex items-center gap-2 text-brand-primary font-black text-xs uppercase tracking-[0.2em] w-fit hover:opacity-70 transition-opacity"
+                                    >
                                         <span>Secure Booking</span>
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                                    </div>
+                                    </Link>
                                 </div>
                             </motion.div>
                         ))}

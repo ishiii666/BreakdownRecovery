@@ -37,13 +37,14 @@ export default function Navbar() {
     const navLinks = [
         {
             name: "Recovery Services", dropdown: [
-                { name: "Flat Tyre Repair", href: "#tyres" },
-                { name: "Tyre Changes", href: "#tyre-changes" },
-                { name: "Jump Starts", href: "#jump-starts" },
-                { name: "Accident Recovery", href: "#accident" },
-                { name: "Vehicle Towing", href: "#towing" }
+                { name: "Breakdown Recovery", href: "/services/breakdown-recovery" },
+                { name: "Flat Tyre Repair", href: "/services/flat-tyre-repair" },
+                { name: "Jump Starts", href: "/services/jump-starts" },
+                { name: "Accident Recovery", href: "/services/accident-recovery" },
+                { name: "Roadside Repair", href: "/services/roadside-repair" }
             ]
         },
+        { name: "About Us", href: "/about" },
         { name: "Contact Us", href: "#contact" },
     ];
 
@@ -133,7 +134,7 @@ export default function Navbar() {
                                                             {locations.map((loc) => (
                                                                 <Link
                                                                     key={loc}
-                                                                    href={`#locations`}
+                                                                    href={`/recovery/${loc.toLowerCase().replace(/ /g, '-')}`}
                                                                     className="block px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-white/50 hover:text-white hover:bg-white/5 rounded-2xl transition-all"
                                                                 >
                                                                     {loc}
@@ -181,6 +182,14 @@ export default function Navbar() {
                                             )}
                                         </AnimatePresence>
                                     </div>
+
+                                    <Link
+                                        href="/about"
+                                        className={`text-[10px] 2xl:text-[11px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap hover:text-brand-primary ${isScrolled ? "text-white" : "text-slate-800"
+                                            }`}
+                                    >
+                                        About Us
+                                    </Link>
 
                                     <Link
                                         href="#contact"
@@ -262,7 +271,7 @@ export default function Navbar() {
                                         {locations.map((loc) => (
                                             <Link
                                                 key={loc}
-                                                href={`#${loc.toLowerCase().replace(/ /g, '-')}`}
+                                                href={`/recovery/${loc.toLowerCase().replace(/ /g, '-')}`}
                                                 onClick={() => setIsMobileMenuOpen(false)}
                                                 className="block text-sm font-bold opacity-60 hover:opacity-100 hover:text-brand-primary transition-all"
                                             >
@@ -288,6 +297,17 @@ export default function Navbar() {
                                         </Link>
                                     ))}
                                 </div>
+                            </section>
+
+                            {/* About Us */}
+                            <section>
+                                <Link
+                                    href="/about"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="block p-5 rounded-[24px] bg-white/5 border border-white/5 text-lg font-black hover:bg-brand-primary/10 hover:text-brand-primary transition-all text-center"
+                                >
+                                    About Us
+                                </Link>
                             </section>
 
                             {/* Contact Us */}

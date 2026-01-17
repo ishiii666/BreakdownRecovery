@@ -1,12 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Phone, ArrowRight, ShieldCheck, Clock, Award, Star } from "lucide-react";
 import { siteDetails } from "@/lib/siteDetails";
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[90vh] flex items-center pt-40 pb-20 overflow-hidden bg-brand-bg-light">
+        <section className="relative min-h-[90vh] flex items-center pt-52 md:pt-40 pb-20 overflow-hidden bg-brand-bg-light">
             {/* Animated Background Elements */}
             <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-primary/5 to-transparent pointer-events-none" />
             <div className="absolute -top-24 -left-24 w-96 h-96 bg-brand-secondary/5 rounded-full blur-3xl pointer-events-none" />
@@ -53,10 +55,13 @@ export default function Hero() {
                                 <Phone className="w-5 h-5 md:w-6 md:h-6 text-brand-primary" />
                                 <span>Call Now: {siteDetails.phone}</span>
                             </a>
-                            <button className="inline-flex items-center justify-center gap-3 px-8 md:px-10 py-4 md:py-5 border-2 border-slate-200 text-slate-900 rounded-[24px] font-black text-lg md:text-xl hover:border-brand-primary hover:bg-white hover:shadow-xl transition-all">
+                            <Link
+                                href="/about"
+                                className="inline-flex items-center justify-center gap-3 px-8 md:px-10 py-4 md:py-5 border-2 border-slate-200 text-slate-900 rounded-[24px] font-black text-lg md:text-xl hover:border-brand-primary hover:bg-white hover:shadow-xl transition-all"
+                            >
                                 <span>Learn More</span>
                                 <ArrowRight className="w-5 h-5 text-brand-primary" />
-                            </button>
+                            </Link>
                         </motion.div>
 
                         {/* Social Proof / Stats */}

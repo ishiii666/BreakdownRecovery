@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Search, ChevronRight, CreditCard, Shield } from "lucide-react";
+import Link from "next/link";
 
 export default function ServiceAvailability() {
     return (
@@ -52,10 +53,13 @@ export default function ServiceAvailability() {
                                     className="w-full bg-slate-50 border-2 border-transparent rounded-[28px] py-5 md:py-6 pl-16 pr-8 text-lg font-bold text-brand-bg-dark placeholder:text-slate-300 focus:outline-none focus:bg-white focus:border-brand-primary/10 transition-all duration-300"
                                 />
                             </div>
-                            <button className="bg-brand-bg-dark text-white px-10 py-5 md:py-0 rounded-[28px] font-black text-lg flex items-center justify-center gap-3 hover:bg-brand-primary transition-all duration-500 shadow-xl hover:shadow-brand-primary/30 group/btn">
+                            <Link
+                                href="/availability"
+                                className="bg-brand-bg-dark text-white px-10 py-5 md:py-0 rounded-[28px] font-black text-lg flex items-center justify-center gap-3 hover:bg-brand-primary transition-all duration-500 shadow-xl hover:shadow-brand-primary/30 group/btn"
+                            >
                                 <span>Check Coverage</span>
                                 <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            </Link>
                         </div>
                     </motion.div>
 

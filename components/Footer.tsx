@@ -14,8 +14,8 @@ export default function Footer() {
             <div className="container-custom relative z-10 pt-24 pb-12">
                 <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 mb-4">
 
-                    {/* Brand & Mission */}
-                    <div className="lg:col-span-4 space-y-6">
+                    {/* Brand & Mission Haus */}
+                    <div className="lg:col-span-4 space-y-8 mt-4">
                         <Link href="/" className="flex items-center gap-4 group">
                             <div className="w-14 h-14 rounded-2xl bg-brand-primary flex items-center justify-center shadow-2xl shadow-brand-primary/20 shrink-0 p-2 transition-transform group-hover:scale-105">
                                 <img
@@ -59,32 +59,55 @@ export default function Footer() {
                     </div>
 
                     {/* Navigation Columns */}
-                    <div className="lg:col-span-8 grid sm:grid-cols-3 gap-8 sm:gap-4 ml-0 lg:ml-12">
+                    <div className="lg:col-span-8 grid sm:grid-cols-3 gap-12 sm:gap-8 ml-0 lg:ml-12 mt-16 lg:mt-6">
 
-                        {/* Services */}
-                        <div className="space-y-6 text-center sm:text-left">
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Services</h4>
-                            <ul className="space-y-3">
-                                {["Emergency Recovery", "Jump Start Pro", "Mobile Tyre Fitting", "Vehicle Transport", "Accident Recovery"].map((item) => (
-                                    <li key={item}>
-                                        <Link href="#services" className="text-white/30 hover:text-brand-primary transition-all font-bold text-xs tracking-wide flex items-center justify-center sm:justify-start gap-2 group">
-                                            <CheckCircle2 className="w-3 h-3 opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all text-brand-primary" />
-                                            {item}
+                        {/* Our Expertise */}
+                        <div className="space-y-8 text-center sm:text-left">
+                            <div className="space-y-2">
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-primary">What We Do</h4>
+                                <p className="text-[16px] font-black text-white italic">Our Expertise</p>
+                            </div>
+                            <ul className="space-y-4">
+                                {[
+                                    { name: "Emergency Recovery", href: "/services/breakdown-recovery" },
+                                    { name: "Jump Start Pro", href: "/services/jump-starts" },
+                                    { name: "Mobile Tyre Fitting", href: "/services/flat-tyre-repair" },
+                                    { name: "Vehicle Transport", href: "/services/vehicle-towing" },
+                                    { name: "Accident Recovery", href: "/services/accident-recovery" }
+                                ].map((item) => (
+                                    <li key={item.name}>
+                                        <Link href={item.href} className="text-white/40 hover:text-brand-primary transition-all font-bold text-xs tracking-wide flex items-center justify-center sm:justify-start gap-3 group">
+                                            <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-brand-primary/20 group-hover:text-brand-primary transition-colors">
+                                                <CheckCircle2 className="w-3 h-3" />
+                                            </div>
+                                            {item.name}
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
                         </div>
 
-                        {/* Top Locations */}
-                        <div className="space-y-6 text-center sm:text-left">
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Service Areas</h4>
-                            <ul className="space-y-3">
-                                {["London Central", "Greater Manchester", "Birmingham West", "Leeds & Yorkshire", "Liverpool Bay", "Scotland Central"].map((item) => (
-                                    <li key={item}>
-                                        <Link href="#locations" className="text-white/30 hover:text-white transition-all font-bold text-xs tracking-wide flex items-center justify-center sm:justify-start gap-2 group">
-                                            <MapPin className="w-3 h-3 opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all text-brand-primary" />
-                                            {item}
+                        {/* Service Areas */}
+                        <div className="space-y-8 text-center sm:text-left">
+                            <div className="space-y-2">
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Coverage</h4>
+                                <p className="text-[16px] font-black text-white italic">Local Units</p>
+                            </div>
+                            <ul className="space-y-4">
+                                {[
+                                    { name: "Batley Recovery", href: "/recovery/batley-car-recovery" },
+                                    { name: "Bradford Recovery", href: "/recovery/bradford-car-recovery" },
+                                    { name: "Dewsbury Recovery", href: "/recovery/dewsbury-car-recovery" },
+                                    { name: "Castleford Recovery", href: "/recovery/castleford-car-recovery" },
+                                    { name: "Elland Recovery", href: "/recovery/elland-car-recovery" },
+                                    { name: "Scotland Central", href: "/availability" }
+                                ].map((item) => (
+                                    <li key={item.name}>
+                                        <Link href={item.href} className="text-white/40 hover:text-white transition-all font-bold text-xs tracking-wide flex items-center justify-center sm:justify-start gap-3 group">
+                                            <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                                <MapPin className="w-3 h-3 text-brand-primary" />
+                                            </div>
+                                            {item.name}
                                         </Link>
                                     </li>
                                 ))}
@@ -92,9 +115,12 @@ export default function Footer() {
                         </div>
 
                         {/* Legal & Trust */}
-                        <div className="space-y-6 text-center sm:text-left">
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Compliance</h4>
-                            <ul className="space-y-3">
+                        <div className="space-y-8 text-center sm:text-left">
+                            <div className="space-y-2">
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Trust</h4>
+                                <p className="text-[16px] font-black text-white italic">Compliance</p>
+                            </div>
+                            <ul className="space-y-4">
                                 {["Privacy Policy", "Terms of Use", "Cookie Settings", "Consumer Rights", "Cancellation Policy"].map((item) => (
                                     <li key={item}>
                                         <Link href="#" className="text-white/30 hover:text-brand-primary transition-all font-bold text-xs tracking-wide block">

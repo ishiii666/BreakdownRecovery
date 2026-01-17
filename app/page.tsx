@@ -19,7 +19,9 @@ export default function Home() {
                 <Hero />
                 <UrgencyMarquee />
                 <ServiceAvailability />
-                <ContactForm />
+                <div id="emergency-form">
+                    <ContactForm />
+                </div>
                 <Services />
                 <DetailedContact />
                 <TrustSection />
