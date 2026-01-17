@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Phone, ArrowRight, ShieldCheck, Clock, Award, Star } from "lucide-react";
-import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 
 export default function Hero() {
+    const { details } = useSite();
     return (
         <section className="relative min-h-[90vh] flex items-center pt-52 md:pt-40 pb-20 overflow-hidden bg-brand-bg-light">
             {/* Animated Background Elements */}
@@ -33,12 +34,12 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.2 }}
                         >
-                            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-brand-bg-dark leading-[1.05]">
+                            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-brand-bg-dark leading-[1.15] md:leading-[1.2]">
                                 Fast & Professional <br />
-                                <span className="gold-text-gradient italic">Vehicle Recovery</span>
+                                <span className="gold-text-gradient italic inline-block pb-2 pr-4">Vehicle Recovery</span>
                             </h1>
                             <p className="mt-6 md:mt-8 text-lg md:text-xl text-slate-600 max-w-2xl leading-relaxed font-medium">
-                                Don't stay stranded. <span className="text-brand-primary font-black underline decoration-brand-primary/30 underline-offset-8">Rapid Rescue</span> arrives in an average of 30 minutes. Available 24/7.
+                                Don't stay stranded. <span className="text-brand-primary font-black underline decoration-brand-primary/30 underline-offset-8">{details.businessName}</span> arrives in an average of 30 minutes. Available 24/7.
                             </p>
                         </motion.div>
 
@@ -49,11 +50,11 @@ export default function Hero() {
                             className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 pt-4"
                         >
                             <a
-                                href={`tel:${siteDetails.phone}`}
+                                href={`tel:${details.phone}`}
                                 className="group relative inline-flex items-center justify-center gap-4 px-8 md:px-10 py-4 md:py-5 bg-brand-bg-dark text-white rounded-[24px] font-black text-lg md:text-xl transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-black/20 overflow-hidden"
                             >
                                 <Phone className="w-5 h-5 md:w-6 md:h-6 text-brand-primary" />
-                                <span>Call Now: {siteDetails.phone}</span>
+                                <span>Call Now: {details.phone}</span>
                             </a>
                             <Link
                                 href="/about"

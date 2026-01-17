@@ -42,16 +42,16 @@ export const services = [
         ]
     },
     {
-        name: "Jump Starts",
+        name: "Jumpstart",
         slug: "jump-starts",
-        title: "24/7 Emergency Vehicle Jump Start Service",
-        description: "Dead battery? Our team provides rapid jump start services for all vehicle types, reaching you in as little as 30 minutes.",
+        title: "24/7 Emergency Vehicle Jumpstart Service",
+        description: "Dead battery? Our team provides rapid jumpstart services for all vehicle types, reaching you in as little as 30 minutes.",
         image: "/images/jump_start_service.png",
-        content: "A flat battery can be a major inconvenience. Our emergency jump start service is available 24/7. Our technicians carry professional-grade jump start equipment to ensure a safe and efficient start every time.",
+        content: "A flat battery can be a major inconvenience. Our emergency jumpstart service is available 24/7. Our technicians carry professional-grade jumpstart equipment to ensure a safe and efficient start every time.",
         benefits: [
             "24/7 rapid response for battery issues",
             "Professional-grade equipment for safe starts",
-            "Battery health assessment with every jump start",
+            "Battery health assessment with every jumpstart",
             "Expertise in handling all modern vehicle electronics"
         ]
     },

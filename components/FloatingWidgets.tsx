@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Phone, MessageCircle } from 'lucide-react';
-import { siteDetails } from '@/lib/siteDetails';
+import { useSite } from '@/context/SiteContext';
 
 export default function FloatingWidgets() {
+    const { details } = useSite();
     return (
         <div className="fixed inset-0 pointer-events-none z-[200]">
             {/* Bottom-Left: Live Support */}
@@ -14,7 +15,7 @@ export default function FloatingWidgets() {
                 className="absolute bottom-6 left-4 md:left-6 pointer-events-auto"
             >
                 <a
-                    href={`tel:${siteDetails.phone}`}
+                    href={`tel:${details.phone}`}
                     className="group relative flex items-center gap-2 bg-[#FF0000] text-white px-3 md:px-4 py-2 rounded-xl shadow-[0_8px_32px_rgba(255,0,0,0.3)] hover:scale-105 active:scale-95 transition-all font-black text-[10px] md:text-xs uppercase tracking-wider overflow-hidden"
                 >
                     {/* Pulsing Background Effect */}
@@ -37,7 +38,7 @@ export default function FloatingWidgets() {
                 className="absolute bottom-6 right-4 md:right-6 pointer-events-auto"
             >
                 <a
-                    href={`https://wa.me/${siteDetails.whatsapp.replace(/ /g, '')}`}
+                    href={`https://wa.me/${details.whatsapp.replace(/ /g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="relative w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_8px_32px_rgba(37,211,102,0.4)] hover:scale-110 active:scale-95 transition-all group border border-white/20"

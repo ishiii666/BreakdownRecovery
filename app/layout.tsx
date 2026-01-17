@@ -20,6 +20,8 @@ export const metadata: Metadata = {
     description: siteDetails.meta.description,
 };
 
+import { SiteProvider } from '@/context/SiteContext';
+
 export default function RootLayout({
     children,
 }: {
@@ -28,8 +30,10 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
             <body className={`${inter.className} antialiased`}>
-                {children}
-                <FloatingWidgets />
+                <SiteProvider>
+                    {children}
+                    <FloatingWidgets />
+                </SiteProvider>
             </body>
         </html>
     );

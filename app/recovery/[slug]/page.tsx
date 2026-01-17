@@ -7,7 +7,7 @@ import ContactForm from '@/components/ContactForm';
 import CallToAction from '@/components/CallToAction';
 import Footer from '@/components/Footer';
 import { Phone, Clock, ShieldCheck, MapPin, ArrowRight, Star } from 'lucide-react';
-import { siteDetails } from '@/lib/siteDetails';
+import { DynamicPhone, DynamicBusinessName } from '@/components/DynamicContactParts';
 
 export async function generateStaticParams() {
     return locations.map((loc) => ({
@@ -39,7 +39,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
                             </div>
 
                             <h1 className="text-5xl md:text-7xl font-black tracking-tight text-brand-bg-dark leading-tight">
-                                Reliable <span className="gold-text-gradient italic">Vehicle Recovery</span> in {location.title.replace(' Car Recovery', '')}
+                                Reliable <span className="gold-text-gradient italic inline-block pr-4">Vehicle Recovery</span> in {location.title.replace(' Car Recovery', '')}
                             </h1>
 
                             <p className="text-xl text-slate-600 max-w-xl leading-relaxed font-medium">
@@ -47,13 +47,10 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
                             </p>
 
                             <div className="flex flex-wrap gap-4 pt-4">
-                                <a
-                                    href={`tel:${siteDetails.phone}`}
+                                <DynamicPhone
                                     className="inline-flex items-center gap-4 px-8 py-4 bg-brand-bg-dark text-white rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-xl shadow-black/20"
-                                >
-                                    <Phone className="w-5 h-5 text-brand-primary" />
-                                    <span>Call {siteDetails.phone}</span>
-                                </a>
+                                    iconClass="w-5 h-5 text-brand-primary"
+                                />
                                 <button className="inline-flex items-center gap-3 px-8 py-4 border-2 border-slate-200 text-slate-900 rounded-2xl font-black text-lg hover:border-brand-primary hover:bg-white transition-all">
                                     <span>Instant Quote</span>
                                     <ArrowRight className="w-5 h-5 text-brand-primary" />
@@ -142,7 +139,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
                             </h2>
                             <div className="space-y-6">
                                 <p className="text-lg text-white/70 leading-relaxed font-medium">
-                                    At Rapid Rescue, we understand that vehicle breakdowns are stressful. That's why we've positioned our fleet strategically in {location.title.replace(' Car Recovery', '')} to ensure minimal wait times.
+                                    At <DynamicBusinessName />, we understand that vehicle breakdowns are stressful. That's why we've positioned our fleet strategically in {location.title.replace(' Car Recovery', '')} to ensure minimal wait times.
                                 </p>
                                 <ul className="space-y-4">
                                     {[

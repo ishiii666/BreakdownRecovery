@@ -2,9 +2,10 @@
 
 import { motion } from "framer-motion";
 import { Phone, Mail, MessageCircle, MapPin, CheckCircle2, ArrowRight, ExternalLink } from "lucide-react";
-import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 
 export default function DetailedContact() {
+    const { details } = useSite();
     const tags = [
         "Breakdown recovery",
         "Roadside assistance",
@@ -60,10 +61,22 @@ export default function DetailedContact() {
                             </h3>
 
                             <p className="text-white/60 text-base md:text-lg leading-relaxed font-medium mb-8 md:mb-10 max-w-lg">
-                                <span className="text-brand-primary">Rapid Rescue</span> provides dependable vehicle recovery and roadside assistance with a focus on safety, quick turnaround, and straightforward pricing.
+                                <span className="text-brand-primary">{details.businessName}</span> provides dependable vehicle recovery and roadside assistance with a focus on safety, quick turnaround, and straightforward pricing.
                             </p>
 
-                            <div className="flex flex-wrap gap-2 md:gap-3 mt-auto">
+                            {/* Live Status Indicator for Support Card */}
+                            <div className="flex items-center gap-4 mb-8 p-4 rounded-2xl bg-white/5 border border-white/5 group-hover:bg-white/10 transition-colors">
+                                <div className="relative">
+                                    <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
+                                    <div className="absolute inset-0 w-3 h-3 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-500">Fleet Active</span>
+                                    <span className="text-[11px] font-bold text-white/40">24 Ready in your area</span>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2 md:gap-3">
                                 {tags.map((tag) => (
                                     <span
                                         key={tag}
@@ -92,7 +105,7 @@ export default function DetailedContact() {
                             <div className="space-y-4 w-full">
                                 {/* Phone Button */}
                                 <a
-                                    href={`tel:${siteDetails.phone}`}
+                                    href={`tel:${details.phone}`}
                                     className="flex items-center justify-between p-4 md:p-6 rounded-[24px] md:rounded-[28px] bg-brand-primary/5 border border-brand-primary/20 text-brand-bg-dark hover:bg-brand-primary hover:text-white transition-all duration-500 group/btn shadow-sm"
                                 >
                                     <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
@@ -101,7 +114,7 @@ export default function DetailedContact() {
                                         </div>
                                         <div className="flex flex-col overflow-hidden">
                                             <span className="text-[9px] font-black uppercase tracking-widest opacity-60">Call Us Now</span>
-                                            <span className="text-lg md:text-xl font-black tracking-tight truncate">{siteDetails.phone}</span>
+                                            <span className="text-lg md:text-xl font-black tracking-tight truncate">{details.phone}</span>
                                         </div>
                                     </div>
                                     <ArrowRight className="w-5 h-5 md:w-6 md:h-6 shrink-0 transform group-hover/btn:translate-x-2 transition-transform" />
@@ -109,7 +122,7 @@ export default function DetailedContact() {
 
                                 {/* Email Button */}
                                 <a
-                                    href={`mailto:${siteDetails.email}`}
+                                    href={`mailto:${details.email}`}
                                     className="flex items-center justify-between p-4 md:p-6 rounded-[24px] md:rounded-[28px] bg-slate-50 border border-slate-100 text-brand-bg-dark hover:bg-slate-900 hover:text-white transition-all duration-500 group/btn shadow-sm"
                                 >
                                     <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
@@ -118,7 +131,7 @@ export default function DetailedContact() {
                                         </div>
                                         <div className="flex flex-col overflow-hidden">
                                             <span className="text-[9px] font-black uppercase tracking-widest opacity-60">Email Address</span>
-                                            <span className="text-base md:text-xl font-black tracking-tight uppercase truncate">{siteDetails.email}</span>
+                                            <span className="text-base md:text-xl font-black tracking-tight uppercase truncate">{details.email}</span>
                                         </div>
                                     </div>
                                     <ExternalLink className="w-5 h-5 opacity-40 group-hover/btn:opacity-100 shrink-0" />
@@ -126,7 +139,7 @@ export default function DetailedContact() {
 
                                 {/* WhatsApp Button */}
                                 <a
-                                    href={`https://wa.me/${siteDetails.whatsapp.replace(/ /g, '')}`}
+                                    href={`https://wa.me/${details.whatsapp.replace(/ /g, '')}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center justify-center p-5 md:p-6 rounded-[24px] md:rounded-[28px] bg-emerald-500 text-white hover:bg-emerald-600 transition-all duration-500 shadow-lg shadow-emerald-500/20 active:scale-95 group/wa"
@@ -137,15 +150,32 @@ export default function DetailedContact() {
                             </div>
                         </div>
 
-                        <div className="mt-8 md:mt-12 pt-8 md:pt-10 border-t border-slate-50 flex items-start gap-4">
-                            <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center shrink-0">
-                                <MapPin className="w-5 h-5 text-slate-400" />
+                        <div className="mt-8 md:mt-12 pt-8 md:pt-10 border-t border-slate-50 space-y-4">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
+                                    <MapPin className="w-5 h-5 text-brand-primary" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">Service Coverage</span>
+                                    <p className="text-brand-bg-dark font-bold text-xs md:text-sm">
+                                        {details.serviceArea}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">Service Area</span>
-                                <p className="text-slate-600 font-bold leading-relaxed text-xs md:text-base">
-                                    {siteDetails.serviceArea}
-                                </p>
+
+                            {/* Embedded Map */}
+                            <div className="w-full h-36 rounded-[28px] overflow-hidden border-2 border-slate-50 shadow-inner group/map relative">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d158858.47340002644!2d-0.24168144923117625!3d51.5285582417616!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon!5e0!3m2!1sen!2suk!4v1710672000000!5m2!1sen!2suk"
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 0, filter: 'grayscale(0.5) contrast(1.2) brightness(1.1)' }}
+                                    allowFullScreen
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    className="grayscale group-hover/map:grayscale-0 transition-all duration-700"
+                                ></iframe>
+                                <div className="absolute inset-0 pointer-events-none border-[8px] border-white/10 rounded-[28px]"></div>
                             </div>
                         </div>
                     </motion.div>

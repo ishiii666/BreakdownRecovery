@@ -42,7 +42,7 @@ const services = [
         image: BREAKDOWN_IMG
     },
     {
-        title: "Jump Starts",
+        title: "Jumpstart",
         slug: "jump-starts",
         description: "Dead battery? Our team carries professional equipment to get your car started in minutes.",
         icon: <Zap className="w-8 h-8" />,

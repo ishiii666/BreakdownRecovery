@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import UrgencyMarquee from "@/components/UrgencyMarquee";
-import { siteDetails } from "@/lib/siteDetails";
+import { DynamicPhone } from "@/components/DynamicContactParts";
 import { Phone, Clock, ShieldCheck, Star, ArrowRight, CheckCircle2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -40,13 +40,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                                 {service.description}
                             </p>
                             <div className="flex flex-wrap gap-4 pt-4">
-                                <a
-                                    href={`tel:${siteDetails.phone}`}
+                                <DynamicPhone
                                     className="px-10 py-5 bg-brand-bg-dark text-white rounded-[24px] font-black text-lg shadow-2xl hover:bg-brand-primary transition-all active:scale-95 flex items-center gap-4"
-                                >
-                                    <Phone className="w-6 h-6 text-brand-primary" />
-                                    <span>{siteDetails.phone}</span>
-                                </a>
+                                    iconClass="w-6 h-6 text-brand-primary"
+                                />
                             </div>
                         </div>
 
@@ -137,12 +134,9 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
                             <div className="p-10 rounded-[48px] border-2 border-slate-100 bg-white shadow-xl flex flex-col items-center text-center space-y-4">
                                 <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px]">Need assistance now?</p>
-                                <a
-                                    href={`tel:${siteDetails.phone}`}
+                                <DynamicPhone
                                     className="text-3xl md:text-4xl font-black text-brand-bg-dark hover:text-brand-primary transition-colors tracking-tight"
-                                >
-                                    {siteDetails.phone}
-                                </a>
+                                />
                                 <p className="text-slate-400 font-medium">Available 24/7 for emergency help.</p>
                             </div>
                         </div>

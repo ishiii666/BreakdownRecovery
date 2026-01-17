@@ -37,7 +37,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
     const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
         { id: 'breakdown', label: 'Breakdown Recovery', icon: <Car className="w-4 h-4" /> },
         { id: 'tyres', label: 'Mobile Tyres', icon: <AlertCircle className="w-4 h-4 rotate-180" /> },
-        { id: 'jumpstart', label: 'Jump Start', icon: <Zap className="w-4 h-4" /> },
+        { id: 'jumpstart', label: 'Jumpstart', icon: <Zap className="w-4 h-4" /> },
     ];
 
     return (
@@ -56,7 +56,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                     }`}
                             >
                                 {tab.icon}
-                                {tab.label.split(' ')[0]}
+                                {tab.label}
                             </button>
                         ))}
                     </div>

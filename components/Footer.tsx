@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, ShieldCheck, Clock, CheckCircle2 } from "lucide-react";
-import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 
 export default function Footer() {
+    const { details } = useSite();
     return (
         <footer className="bg-[#0A0F16] text-white relative overflow-hidden border-t border-white/5 mt-20">
             {/* Background Decorative Elements */}
@@ -56,6 +57,7 @@ export default function Footer() {
                                 </Link>
                             ))}
                         </div>
+
                     </div>
 
                     {/* Navigation Columns */}
@@ -120,7 +122,7 @@ export default function Footer() {
                                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40">Trust</h4>
                                 <p className="text-[16px] font-black text-white italic">Compliance</p>
                             </div>
-                            <ul className="space-y-4">
+                            <ul className="space-y-4 mb-8">
                                 {["Privacy Policy", "Terms of Use", "Cookie Settings", "Consumer Rights", "Cancellation Policy"].map((item) => (
                                     <li key={item}>
                                         <Link href="#" className="text-white/30 hover:text-brand-primary transition-all font-bold text-xs tracking-wide block">
@@ -129,6 +131,21 @@ export default function Footer() {
                                     </li>
                                 ))}
                             </ul>
+
+                            {/* Footer Map - Moved under Compliance */}
+                            <div className="w-full h-28 rounded-xl overflow-hidden border border-white/10 shadow-2xl relative group/footmap">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d158858.47340002644!2d-0.24168144923117625!3d51.5285582417616!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon!5e0!3m2!1sen!2suk!4v1710672000000!5m2!1sen!2suk"
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 0, filter: 'grayscale(1) invert(0.9) contrast(1.5)' }}
+                                    allowFullScreen
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    className="transition-all duration-700 group-hover/footmap:grayscale-0 group-hover/footmap:invert-0 group-hover/footmap:contrast-100"
+                                ></iframe>
+                                <div className="absolute inset-0 pointer-events-none bg-brand-primary/5 group-hover/footmap:opacity-0 transition-opacity"></div>
+                            </div>
                         </div>
 
                     </div>
@@ -143,7 +160,7 @@ export default function Footer() {
                             </div>
                             <div>
                                 <p className="text-[9px] font-black uppercase tracking-widest text-white/20 mb-0.5">Emergency Dispatch</p>
-                                <a href={`tel:${siteDetails.phone}`} className="text-xl font-black text-white hover:text-brand-primary transition-colors">{siteDetails.phone}</a>
+                                <a href={`tel:${details.phone}`} className="text-xl font-black text-white hover:text-brand-primary transition-colors">{details.phone}</a>
                             </div>
                         </div>
                         <div className="flex items-center gap-4 p-1 rounded-3xl group">
@@ -152,7 +169,7 @@ export default function Footer() {
                             </div>
                             <div>
                                 <p className="text-[9px] font-black uppercase tracking-widest text-white/20 mb-0.5">Support Email</p>
-                                <a href={`mailto:${siteDetails.email}`} className="text-lg font-bold text-white hover:text-brand-primary transition-colors">{siteDetails.email}</a>
+                                <a href={`mailto:${details.email}`} className="text-lg font-bold text-white hover:text-brand-primary transition-colors">{details.email}</a>
                             </div>
                         </div>
                     </div>
@@ -173,7 +190,7 @@ export default function Footer() {
                 {/* Bottom Bar */}
                 <div className="mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-white/20 text-[9px] md:text-xs font-bold uppercase tracking-widest">
-                        © {new Date().getFullYear()} {siteDetails.businessName} Network. All rights reserved.
+                        © {new Date().getFullYear()} {details.businessName} Network. All rights reserved.
                     </p>
                     <div className="flex items-center gap-4 text-white/20 text-[9px] font-bold uppercase tracking-widest">
                         <span>FCA Regulated</span>

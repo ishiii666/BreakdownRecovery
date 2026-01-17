@@ -30,7 +30,7 @@ export default function AboutPage() {
 
                         <h1 className="text-3xl md:text-5xl font-black tracking-tight text-brand-bg-dark leading-tight tracking-tight">
                             More Than Just a <br />
-                            <span className="gold-text-gradient italic underline decoration-brand-primary/20 underline-offset-8">Roadside Service.</span>
+                            <span className="gold-text-gradient italic underline decoration-brand-primary/20 underline-offset-8 pr-4 inline-block">Roadside Service.</span>
                         </h1>
 
                         <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed max-w-3xl mx-auto">

@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, Truck, Menu, X, ChevronDown, Clock } from "lucide-react";
-import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 
 export default function Navbar() {
+    const { details } = useSite();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -39,7 +40,7 @@ export default function Navbar() {
             name: "Recovery Services", dropdown: [
                 { name: "Breakdown Recovery", href: "/services/breakdown-recovery" },
                 { name: "Flat Tyre Repair", href: "/services/flat-tyre-repair" },
-                { name: "Jump Starts", href: "/services/jump-starts" },
+                { name: "Jumpstart", href: "/services/jump-starts" },
                 { name: "Accident Recovery", href: "/services/accident-recovery" },
                 { name: "Roadside Repair", href: "/services/roadside-repair" }
             ]
@@ -67,7 +68,7 @@ export default function Navbar() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Phone className="w-3.5 h-3.5 text-brand-primary" />
-                                <span>Direct: {siteDetails.phone}</span>
+                                <span>Direct: {details.phone}</span>
                             </div>
                         </div>
                     </div>
@@ -202,7 +203,7 @@ export default function Navbar() {
 
                                 {/* Call Button */}
                                 <a
-                                    href={`tel:${siteDetails.phone}`}
+                                    href={`tel:${details.phone}`}
                                     className={`px-8 py-3.5 rounded-2xl font-black text-[10px] 2xl:text-[11px] uppercase tracking-[0.1em] transition-all hover:scale-105 active:scale-95 shadow-xl whitespace-nowrap ml-4 ${isScrolled
                                         ? "bg-brand-primary text-white shadow-brand-primary/30 hover:bg-white hover:text-brand-primary"
                                         : "bg-brand-bg-dark text-white shadow-black/20 hover:bg-brand-primary"
@@ -325,11 +326,11 @@ export default function Navbar() {
                         {/* Footer Action */}
                         <div className="p-6 border-t border-white/5 bg-brand-bg-dark/50">
                             <a
-                                href={`tel:${siteDetails.phone}`}
+                                href={`tel:${details.phone}`}
                                 className="w-full flex items-center justify-center gap-4 px-10 py-6 bg-brand-primary rounded-[28px] text-xl font-black shadow-2xl shadow-brand-primary/20 active:scale-95 transition-transform"
                             >
                                 <Phone className="w-6 h-6" />
-                                <span>{siteDetails.phone}</span>
+                                <span>{details.phone}</span>
                             </a>
                         </div>
                     </motion.div>
