@@ -9,11 +9,7 @@ import Footer from '@/components/Footer';
 import { Phone, Clock, ShieldCheck, MapPin, ArrowRight, Star } from 'lucide-react';
 import { DynamicPhone, DynamicBusinessName } from '@/components/DynamicContactParts';
 
-export async function generateStaticParams() {
-    return locations.map((loc) => ({
-        slug: loc.slug,
-    }));
-}
+export const dynamic = 'force-dynamic';
 
 export default async function LocationPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;

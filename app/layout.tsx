@@ -20,18 +20,27 @@ export const metadata: Metadata = {
     description: siteDetails.meta.description,
 };
 
+export const dynamic = 'force-dynamic';
+
 import { SiteProvider } from '@/context/SiteContext';
 import { supabase } from '@/lib/supabase';
 
 async function getSiteConfig() {
     try {
-        const { data } = await supabase
+        console.log('Fetching site config on server...');
+        const { data, error } = await supabase
             .from('site_config')
             .select('*')
             .eq('id', 1)
             .single();
 
+        if (error) {
+            console.error('Supabase server-side error:', error.message);
+            return null;
+        }
+
         if (data) {
+            console.log('Successfully fetched site config on server:', data.business_name);
             return {
                 businessName: data.business_name,
                 phone: data.phone,
@@ -41,7 +50,7 @@ async function getSiteConfig() {
             };
         }
     } catch (e) {
-        console.error('Error fetching site config on server:', e);
+        console.error('Fatal error fetching site config on server:', e);
     }
     return null;
 }

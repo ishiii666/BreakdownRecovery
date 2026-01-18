@@ -8,6 +8,8 @@ import { Phone, Clock, ShieldCheck, Star, ArrowRight, CheckCircle2 } from "lucid
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const service = services.find((s) => s.slug === slug);
@@ -190,8 +192,4 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     );
 }
 
-export async function generateStaticParams() {
-    return services.map((service) => ({
-        slug: service.slug,
-    }));
-}
+
