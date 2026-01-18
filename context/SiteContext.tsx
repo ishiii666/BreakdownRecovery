@@ -72,14 +72,6 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
 
             if (error) throw error;
             if (data) {
-                setDetails({
-                    businessName: data.business_name,
-                    phone: data.phone,
-                    whatsapp: data.whatsapp,
-                    email: data.email,
-                    service_area: data.service_area
-                } as any);
-
                 // Explicitly mapping because database names are snake_case
                 setDetails({
                     businessName: data.business_name,

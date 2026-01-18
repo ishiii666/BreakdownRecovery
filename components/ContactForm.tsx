@@ -6,10 +6,12 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Car, MapPin, Users, ClipboardCheck, Phone, AlertCircle, ArrowRight, Navigation, ChevronDown, Zap, HelpCircle, Clock, ShieldCheck } from "lucide-react";
 import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 
 type TabType = 'breakdown' | 'tyres' | 'jumpstart';
 
 export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?: TabType }) {
+    const { details } = useSite();
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
     const [location, setLocation] = useState("");
     const [isLocating, setIsLocating] = useState(false);
@@ -94,7 +96,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                         </div>
                                         <div>
                                             <p className="text-xs font-black uppercase tracking-widest text-slate-400">Direct Line</p>
-                                            <p className="text-xl font-black text-brand-bg-dark">{siteDetails.phone}</p>
+                                            <p className="text-xl font-black text-brand-bg-dark">{details.phone}</p>
                                         </div>
                                     </div>
 

@@ -5,11 +5,13 @@ import Footer from "@/components/Footer";
 import UrgencyMarquee from "@/components/UrgencyMarquee";
 import ContactForm from "@/components/ContactForm";
 import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 import { Phone, MapPin, Search, Clock, ShieldCheck, Zap, ArrowRight, Car } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function AvailabilityPage() {
+    const { details } = useSite();
     return (
         <main className="min-h-screen overflow-x-hidden bg-brand-bg-light">
             <Navbar />
@@ -99,7 +101,7 @@ export default function AvailabilityPage() {
 
                         <div className="flex justify-center">
                             <a
-                                href={`tel:${siteDetails.phone}`}
+                                href={`tel:${details.phone}`}
                                 className="inline-flex items-center gap-6 px-12 py-7 bg-brand-bg-dark text-white rounded-[32px] font-black text-2xl shadow-2xl hover:bg-brand-primary transition-all active:scale-95 group shadow-brand-primary/10"
                             >
                                 <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center group-hover:bg-white/20 transition-colors">
@@ -107,7 +109,7 @@ export default function AvailabilityPage() {
                                 </div>
                                 <div className="text-left">
                                     <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 leading-none mb-1">Immediate Dispatch</p>
-                                    <p className="leading-none">{siteDetails.phone}</p>
+                                    <p className="leading-none">{details.phone}</p>
                                 </div>
                             </a>
                         </div>

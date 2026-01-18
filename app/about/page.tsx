@@ -5,11 +5,13 @@ import Footer from '@/components/Footer';
 import UrgencyMarquee from '@/components/UrgencyMarquee';
 import ContactForm from '@/components/ContactForm';
 import { siteDetails } from '@/lib/siteDetails';
+import { useSite } from '@/context/SiteContext';
 import { Phone, Clock, ShieldCheck, Award, Star, ArrowRight, Zap, Users, MapPin, Gauge, Shield, History, Truck, Wrench } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from "framer-motion";
 
 export default function AboutPage() {
+    const { details } = useSite();
     return (
         <main className="min-h-screen overflow-x-hidden bg-brand-bg-light">
             <Navbar />
@@ -25,7 +27,7 @@ export default function AboutPage() {
                     <div className="max-w-4xl mx-auto text-center space-y-10">
                         <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-brand-bg-dark text-white font-black text-xs uppercase tracking-[0.3em] shadow-2xl">
                             <span className="w-2 h-2 rounded-full bg-brand-primary animate-pulse" />
-                            The Story of Rapid Rescue
+                            The Story of {details.businessName}
                         </div>
 
                         <h1 className="text-3xl md:text-5xl font-black tracking-tight text-brand-bg-dark leading-tight tracking-tight">
@@ -34,7 +36,7 @@ export default function AboutPage() {
                         </h1>
 
                         <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed max-w-3xl mx-auto">
-                            Rapid Rescue was founded on a simple principle: nobody should be left waiting for hours in an emergency. We've built our reputation on <span className="text-brand-bg-dark font-black">lightning-fast response times</span> and professional, human-centric care.
+                            {details.businessName} was founded on a simple principle: nobody should be left waiting for hours in an emergency. We've built our reputation on <span className="text-brand-bg-dark font-black">lightning-fast response times</span> and professional, human-centric care.
                         </p>
                     </div>
                 </div>
@@ -155,7 +157,7 @@ export default function AboutPage() {
                                 <p className="text-slate-600 font-medium leading-relaxed mb-10 flex-grow">{service.desc}</p>
 
                                 <a
-                                    href={`https://wa.me/${siteDetails.whatsapp.replace(/\s+/g, '')}?text=Hi Rapid Rescue, I am interested in ${service.title}.`}
+                                    href={`https://wa.me/${details.whatsapp.replace(/\s+/g, '')}?text=Hi ${details.businessName}, I am interested in ${service.title}.`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="w-full py-4 bg-brand-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest text-center hover:bg-brand-bg-dark transition-all transform hover:scale-[1.02] shadow-lg shadow-brand-primary/10"
@@ -240,7 +242,7 @@ export default function AboutPage() {
                                 <h2 className="text-[10px] font-black text-brand-primary uppercase tracking-[0.4em] italic">Meet the Experts</h2>
                                 <h3 className="text-4xl md:text-6xl font-black text-brand-bg-dark leading-tight tracking-tight">The People Powering <span className="text-brand-primary italic">Every Rescue.</span></h3>
                                 <p className="text-xl text-slate-600 leading-relaxed font-medium">
-                                    Our recovery technicians are the heartbeat of Rapid Rescue. Hand-picked for their technical expertise and empathy, our team undergoes continuous training to handle any situation with professional calm.
+                                    Our recovery technicians are the heartbeat of {details.businessName}. Hand-picked for their technical expertise and empathy, our team undergoes continuous training to handle any situation with professional calm.
                                 </p>
                             </div>
 
@@ -267,7 +269,7 @@ export default function AboutPage() {
 
                             <div className="pt-8">
                                 <a
-                                    href={`tel:${siteDetails.phone}`}
+                                    href={`tel:${details.phone}`}
                                     className="inline-flex items-center gap-4 px-10 py-5 bg-brand-bg-dark text-white rounded-[24px] font-black text-xl hover:bg-brand-primary transition-all shadow-xl shadow-black/20 group"
                                 >
                                     <span>Call Our Team</span>
@@ -298,7 +300,7 @@ export default function AboutPage() {
                             transition={{ delay: 0.1 }}
                             className="text-4xl md:text-5xl font-black text-brand-bg-dark tracking-tight"
                         >
-                            Rapid Rescue Background FAQ
+                            {details.businessName} Background FAQ
                         </motion.h3>
                     </div>
 

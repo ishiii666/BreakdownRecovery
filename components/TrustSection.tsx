@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Clock, MousePointer2, ShieldCheck, Heart, Award, Star, Phone } from "lucide-react";
 import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 
 const trustItems = [
     {
@@ -23,6 +24,7 @@ const trustItems = [
 ];
 
 export default function TrustSection() {
+    const { details } = useSite();
     return (
         <section className="py-24 bg-brand-bg-dark text-white relative overflow-hidden">
             {/* Dynamic Background */}
@@ -49,7 +51,7 @@ export default function TrustSection() {
                         </h2>
 
                         <p className="text-white/60 text-lg font-medium leading-relaxed max-w-xl">
-                            With a legacy of excellence and a nationwide fleet of over 2,000 professional drivers, <span className="text-brand-primary">Rapid Rescue</span> offers a service that prioritizes your safety and peace of mind above all else.
+                            With a legacy of excellence and a nationwide fleet of over 2,000 professional drivers, <span className="text-brand-primary">{details.businessName}</span> offers a service that prioritizes your safety and peace of mind above all else.
                         </p>
 
                         <div className="flex flex-wrap gap-8 pt-6">
@@ -99,12 +101,12 @@ export default function TrustSection() {
                             viewport={{ once: true }}
                             className="bg-brand-primary p-1 rounded-[32px] overflow-hidden group cursor-pointer"
                         >
-                            <a href={`tel:${siteDetails.phone}`} className="flex items-center justify-between p-8 bg-brand-bg-dark rounded-[31px] group-hover:bg-transparent group-hover:text-brand-bg-dark transition-all duration-500">
+                            <a href={`tel:${details.phone}`} className="flex items-center justify-between p-8 bg-brand-bg-dark rounded-[31px] group-hover:bg-transparent group-hover:text-brand-bg-dark transition-all duration-500">
                                 <div className="flex items-center gap-4">
                                     <Phone className="w-8 h-8 group-hover:scale-110 transition-transform" />
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-widest opacity-60">Need help now?</p>
-                                        <p className="text-2xl font-black">{siteDetails.phone}</p>
+                                        <p className="text-2xl font-black">{details.phone}</p>
                                     </div>
                                 </div>
                                 <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-brand-bg-dark group-hover:text-white transition-all">

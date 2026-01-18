@@ -2,13 +2,15 @@
 
 import { motion } from "framer-motion";
 import { siteDetails } from "@/lib/siteDetails";
+import { useSite } from "@/context/SiteContext";
 import { Phone, Clock, AlertTriangle, Zap } from "lucide-react";
 
 export default function UrgencyMarquee() {
+    const { details } = useSite();
     const items = [
         { icon: <Clock className="w-5 h-5" />, text: "30-MINUTE ARRIVAL TIME" },
         { icon: <Zap className="w-5 h-5" />, text: "24/7 EMERGENCY DISPATCH" },
-        { icon: <Phone className="w-5 h-5" />, text: `CALL NOW: ${siteDetails.phone}` },
+        { icon: <Phone className="w-5 h-5" />, text: `CALL NOW: ${details.phone}` },
         { icon: <AlertTriangle className="w-5 h-5" />, text: "NATIONWIDE RECOVERY" }
     ];
 
