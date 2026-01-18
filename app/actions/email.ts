@@ -49,6 +49,20 @@ export async function sendEmergencyEmail(type: 'breakdown' | 'tyres' | 'jumpstar
             return { success: false, error: error.message || "Failed to send email" };
         }
 
+        // Log to database for the admin panel notifications
+        try {
+            await supabase
+                .from('dispatch_logs')
+                .insert([{
+                    type: type,
+                    customer_name: data.registration || 'Unknown',
+                    customer_phone: data.phone || 'N/A',
+                    data: data
+                }]);
+        } catch (dbError) {
+            console.warn("[Email Action] DB Logging failed (non-critical):", dbError);
+        }
+
         console.log(`[Email Action] EMAIL SENT SUCCESSFULLY! ID:`, resData?.id);
         return { success: true, data: resData };
     } catch (error: any) {
