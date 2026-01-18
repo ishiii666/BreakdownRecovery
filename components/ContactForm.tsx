@@ -7,14 +7,38 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Car, MapPin, Users, ClipboardCheck, Phone, AlertCircle, ArrowRight, Navigation, ChevronDown, Zap, HelpCircle, Clock, ShieldCheck } from "lucide-react";
 import { siteDetails } from "@/lib/siteDetails";
 import { useSite } from "@/context/SiteContext";
+import { sendEmergencyEmail } from "@/app/actions/email";
 
 type TabType = 'breakdown' | 'tyres' | 'jumpstart';
 
 export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?: TabType }) {
     const { details } = useSite();
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
-    const [location, setLocation] = useState("");
     const [isLocating, setIsLocating] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+
+    const [formData, setFormData] = useState({
+        vehicleModel: "",
+        registration: "",
+        passengers: "1",
+        serviceType: "Emergency Recovery",
+        pickupLocation: "",
+        dropoffLocation: "",
+        drivability: "Yes, it can be driven",
+        phone: "",
+        issue: "",
+        // Tyre specific
+        tyreSize: "",
+        quantity: "1",
+        tyrePreference: "Part-Worn (Budge Friendly)",
+        lockingWheelNut: "Yes, locking key available",
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handleLocateMe = () => {
         if (!navigator.geolocation) {
@@ -26,7 +50,8 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
-                setLocation(`${latitude.toFixed(4)}, ${longitude.toFixed(4)} (Current Location)`);
+                const loc = `${latitude.toFixed(4)}, ${longitude.toFixed(4)} (Current Location)`;
+                setFormData(prev => ({ ...prev, pickupLocation: loc }));
                 setIsLocating(false);
             },
             () => {
@@ -34,6 +59,43 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                 setIsLocating(false);
             }
         );
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            // 1. Send Email (fails gracefully if API key missing)
+            const emailResult = await sendEmergencyEmail(activeTab, formData);
+            if (!emailResult.success) {
+                console.warn("Email dispatch failed, proceeding to WhatsApp: ", emailResult.error);
+            }
+
+            // 2. Prepare WhatsApp Message
+            const message = `🚨 *EMERGENCY ${activeTab.toUpperCase()} REQUEST*\n\n` +
+                `*Vehicle:* ${formData.vehicleModel}\n` +
+                `*Reg:* ${formData.registration}\n` +
+                `*Location:* ${formData.pickupLocation}\n` +
+                `*Phone:* ${formData.phone}\n` +
+                `${activeTab === 'breakdown' ? `*Drop-off:* ${formData.dropoffLocation}\n` : ''}` +
+                `${formData.issue ? `*Issue:* ${formData.issue}` : ''}`;
+
+            const phone = siteDetails.whatsapp.replace(/\s+/g, '');
+            const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+            // 3. Show Success and Redirect
+            setIsSuccess(true);
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+                setIsSubmitting(false);
+            }, 1000);
+
+        } catch (error) {
+            console.error("Critical submission error:", error);
+            alert("Something went wrong. Please call us directly on " + details.phone);
+            setIsSubmitting(false);
+        }
     };
 
     const tabs: { id: TabType; label: string; icon: React.ReactNode }[] = [
@@ -186,7 +248,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-[100px] -mr-32 -mt-32 opacity-50 pointer-events-none" />
                                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-secondary/5 rounded-full blur-[80px] -ml-24 -mb-24 opacity-50 pointer-events-none" />
 
-                                <form className="space-y-10 relative z-10">
+                                <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
                                     <AnimatePresence mode="wait">
                                         {activeTab === 'breakdown' && (
                                             <motion.div
@@ -201,14 +263,14 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Vehicle Make and Model</label>
                                                         <div className="relative group">
                                                             <Car className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="text" placeholder="E.g., Toyota Corolla" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                            <input name="vehicleModel" value={formData.vehicleModel} onChange={handleInputChange} type="text" placeholder="E.g., Toyota Corolla" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         </div>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Registration Number</label>
                                                         <div className="relative group">
                                                             <ClipboardCheck className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="text" placeholder="E.g., AB12 CDE" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all uppercase" />
+                                                            <input name="registration" value={formData.registration} onChange={handleInputChange} type="text" placeholder="E.g., AB12 CDE" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all uppercase" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,13 +280,13 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Number of Passengers</label>
                                                         <div className="relative group">
                                                             <Users className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="number" placeholder="Enter number of passengers" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                            <input name="passengers" value={formData.passengers} onChange={handleInputChange} type="number" placeholder="Enter number of passengers" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         </div>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Service Type</label>
                                                         <div className="relative group">
-                                                            <select className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
+                                                            <select name="serviceType" value={formData.serviceType} onChange={handleInputChange} className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
                                                                 <option>Emergency Recovery</option>
                                                                 <option>Scheduled Transport</option>
                                                                 <option>Insurance Work</option>
@@ -238,7 +300,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Pickup Location</label>
                                                     <div className="relative group">
                                                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-primary z-10" />
-                                                        <input value={location} onChange={(e) => setLocation(e.target.value)} type="text" placeholder="Enter pickup location or postcode" className="w-full bg-slate-50 py-5 pl-14 pr-32 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                        <input name="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} type="text" placeholder="Enter pickup location or postcode" required className="w-full bg-slate-50 py-5 pl-14 pr-32 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         <button type="button" onClick={handleLocateMe} className="absolute right-3 top-1/2 -translate-y-1/2 px-4 py-2 bg-white text-brand-primary font-black text-[10px] uppercase tracking-wider rounded-xl shadow-sm border border-slate-100 hover:bg-brand-primary hover:text-white transition-all flex items-center gap-2 group/btn">
                                                             <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : 'group-hover/btn:animate-pulse'}`} />
                                                             <span>{isLocating ? 'Wait...' : 'Locate Me'}</span>
@@ -250,7 +312,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Drop-Off Location</label>
                                                     <div className="relative group">
                                                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                        <input type="text" placeholder="Enter drop-off destination" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                        <input name="dropoffLocation" value={formData.dropoffLocation} onChange={handleInputChange} type="text" placeholder="Enter drop-off destination" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                     </div>
                                                 </div>
 
@@ -258,7 +320,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <div className="space-y-2">
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Vehicle Drivability</label>
                                                         <div className="relative group">
-                                                            <select className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
+                                                            <select name="drivability" value={formData.drivability} onChange={handleInputChange} className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
                                                                 <option>Yes, it can be driven</option>
                                                                 <option>No, it's a non-runner</option>
                                                                 <option>Damaged / Accident</option>
@@ -270,7 +332,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Telephone Number</label>
                                                         <div className="relative group">
                                                             <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="tel" placeholder="E.g., 07123 456789" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                            <input name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="E.g., 07123 456789" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -279,7 +341,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Describe the issue (Optional)</label>
                                                     <div className="relative group">
                                                         <HelpCircle className="absolute left-6 top-6 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                        <textarea placeholder="E.g., stuck in park, bent wheel, won't start..." rows={3} className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all"></textarea>
+                                                        <textarea name="issue" value={formData.issue} onChange={handleInputChange} placeholder="E.g., stuck in park, bent wheel, won't start..." rows={3} className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all"></textarea>
                                                     </div>
                                                 </div>
                                             </motion.div>
@@ -298,14 +360,14 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Registration Number</label>
                                                         <div className="relative group">
                                                             <ClipboardCheck className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="text" placeholder="E.g., AB12 CDE" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all uppercase" />
+                                                            <input name="registration" value={formData.registration} onChange={handleInputChange} type="text" placeholder="E.g., AB12 CDE" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all uppercase" />
                                                         </div>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Tyre Size</label>
                                                         <div className="relative group">
                                                             <HelpCircle className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="text" placeholder="E.g., 205/55 R16" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                            <input name="tyreSize" value={formData.tyreSize} onChange={handleInputChange} type="text" placeholder="E.g., 205/55 R16" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -315,13 +377,13 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Quantity</label>
                                                         <div className="relative group">
                                                             <Users className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="number" placeholder="Number of tyres required" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                            <input name="quantity" value={formData.quantity} onChange={handleInputChange} type="number" placeholder="Number of tyres required" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         </div>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Tyre Preference</label>
                                                         <div className="relative group">
-                                                            <select className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
+                                                            <select name="tyrePreference" value={formData.tyrePreference} onChange={handleInputChange} className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
                                                                 <option>Part-Worn (Budge Friendly)</option>
                                                                 <option>New - Budget</option>
                                                                 <option>New - Mid-Range</option>
@@ -336,7 +398,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <div className="space-y-2">
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Locking Wheel Nut</label>
                                                         <div className="relative group">
-                                                            <select className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
+                                                            <select name="lockingWheelNut" value={formData.lockingWheelNut} onChange={handleInputChange} className="w-full bg-slate-50 py-5 px-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all appearance-none cursor-pointer pr-12">
                                                                 <option>Yes, locking key available</option>
                                                                 <option>No key / Lost</option>
                                                                 <option>No Locking Nut Present</option>
@@ -349,7 +411,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Telephone Number</label>
                                                         <div className="relative group">
                                                             <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="tel" placeholder="E.g., 07123 456789" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                            <input name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="E.g., 07123 456789" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -358,7 +420,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Current Location</label>
                                                     <div className="relative group">
                                                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-primary z-10" />
-                                                        <input value={location} onChange={(e) => setLocation(e.target.value)} type="text" placeholder="Where should we send the fitter?" className="w-full bg-slate-50 py-5 pl-14 pr-32 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                        <input name="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} type="text" placeholder="Where should we send the fitter?" required className="w-full bg-slate-50 py-5 pl-14 pr-32 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         <button type="button" onClick={handleLocateMe} className="absolute right-3 top-1/2 -translate-y-1/2 px-4 py-2 bg-white text-brand-primary font-black text-[10px] uppercase tracking-wider rounded-xl shadow-sm border border-slate-100 hover:bg-brand-primary hover:text-white transition-all flex items-center gap-2 group/btn">
                                                             <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : 'group-hover/btn:animate-pulse'}`} />
                                                             <span>{isLocating ? 'Wait' : 'GPS'}</span>
@@ -381,14 +443,14 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Vehicle Registration Number</label>
                                                         <div className="relative group">
                                                             <ClipboardCheck className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="text" placeholder="E.g., AB12 CDE" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all uppercase" />
+                                                            <input name="registration" value={formData.registration} onChange={handleInputChange} type="text" placeholder="E.g., AB12 CDE" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all uppercase" />
                                                         </div>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Telephone Number</label>
                                                         <div className="relative group">
                                                             <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                            <input type="tel" placeholder="For instant reach" className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                            <input name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="For instant reach" required className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -397,7 +459,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Your Exact Location</label>
                                                     <div className="relative group">
                                                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-primary z-10" />
-                                                        <input value={location} onChange={(e) => setLocation(e.target.value)} type="text" placeholder="Pinpoint your location for the technician" className="w-full bg-slate-50 py-5 pl-14 pr-32 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
+                                                        <input name="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} type="text" placeholder="Pinpoint your location for the technician" required className="w-full bg-slate-50 py-5 pl-14 pr-32 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all" />
                                                         <button type="button" onClick={handleLocateMe} className="absolute right-3 top-1/2 -translate-y-1/2 px-4 py-2 bg-white text-brand-primary font-black text-[10px] uppercase tracking-wider rounded-xl shadow-sm border border-slate-100 hover:bg-brand-primary hover:text-white transition-all flex items-center gap-2 group/btn">
                                                             <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : 'group-hover/btn:animate-pulse'}`} />
                                                             <span>{isLocating ? '...' : 'GPS'}</span>
@@ -409,16 +471,21 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-2">Describe the situation (Optional)</label>
                                                     <div className="relative group">
                                                         <Zap className="absolute left-6 top-6 w-5 h-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
-                                                        <textarea placeholder="E.g., battery is completely dead, lights flickering, parked in tight garage..." rows={3} className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all"></textarea>
+                                                        <textarea name="issue" value={formData.issue} onChange={handleInputChange} placeholder="E.g., battery is completely dead, lights flickering, parked in tight garage..." rows={3} className="w-full bg-slate-50 py-5 pl-14 pr-6 rounded-2xl border-2 border-slate-50 font-bold text-brand-bg-dark placeholder:text-slate-400 focus:bg-white focus:border-brand-primary/20 focus:ring-0 transition-all"></textarea>
                                                     </div>
                                                 </div>
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
 
-                                    <button className="w-full py-4 md:py-6 bg-brand-bg-dark text-white rounded-2xl font-black text-lg md:text-xl uppercase tracking-widest flex items-center justify-center gap-2 md:gap-3 hover:bg-brand-primary transition-all active:scale-95 shadow-xl shadow-brand-bg-dark/10 group">
-                                        <span className="truncate">Submit {activeTab === 'breakdown' ? 'Recovery' : activeTab === 'tyres' ? 'Tyre' : 'Inquiry'} Request</span>
-                                        <ArrowRight className="w-5 h-5 md:w-6 md:h-6 shrink-0 group-hover:translate-x-1 transition-transform animate-pulse" />
+                                    <button
+                                        disabled={isSubmitting}
+                                        className={`w-full py-4 md:py-6 rounded-2xl font-black text-lg md:text-xl uppercase tracking-widest flex items-center justify-center gap-2 md:gap-3 transition-all active:scale-95 shadow-xl shadow-brand-bg-dark/10 group ${isSuccess ? "bg-emerald-500 text-white" : "bg-brand-bg-dark text-white hover:bg-brand-primary"}`}
+                                    >
+                                        <span className="truncate">
+                                            {isSuccess ? "✓ Request Sent!" : isSubmitting ? "Processing..." : `Submit ${activeTab === 'breakdown' ? 'Recovery' : activeTab === 'tyres' ? 'Tyre' : 'Inquiry'} Request`}
+                                        </span>
+                                        {!isSuccess && <ArrowRight className="w-5 h-5 md:w-6 md:h-6 shrink-0 group-hover:translate-x-1 transition-transform animate-pulse" />}
                                     </button>
 
                                     <p className="text-center text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed px-4">
