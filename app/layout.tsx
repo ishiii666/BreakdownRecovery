@@ -21,16 +21,42 @@ export const metadata: Metadata = {
 };
 
 import { SiteProvider } from '@/context/SiteContext';
+import { supabase } from '@/lib/supabase';
 
-export default function RootLayout({
+async function getSiteConfig() {
+    try {
+        const { data } = await supabase
+            .from('site_config')
+            .select('*')
+            .eq('id', 1)
+            .single();
+
+        if (data) {
+            return {
+                businessName: data.business_name,
+                phone: data.phone,
+                whatsapp: data.whatsapp,
+                email: data.email,
+                serviceArea: data.service_area
+            };
+        }
+    } catch (e) {
+        console.error('Error fetching site config on server:', e);
+    }
+    return null;
+}
+
+export default async function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const initialData = await getSiteConfig();
+
     return (
         <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
             <body className={`${inter.className} antialiased`}>
-                <SiteProvider>
+                <SiteProvider initialData={initialData as any}>
                     {children}
                     <FloatingWidgets />
                 </SiteProvider>

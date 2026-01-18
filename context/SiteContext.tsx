@@ -19,19 +19,27 @@ type SiteContextType = {
 
 const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
-export function SiteProvider({ children }: { children: React.ReactNode }) {
-    const [details, setDetails] = useState<SiteConfig>({
+export function SiteProvider({
+    children,
+    initialData
+}: {
+    children: React.ReactNode,
+    initialData?: SiteConfig
+}) {
+    const [details, setDetails] = useState<SiteConfig>(initialData || {
         businessName: staticDetails.businessName,
         phone: staticDetails.phone,
         whatsapp: staticDetails.whatsapp,
         email: staticDetails.email,
         serviceArea: staticDetails.serviceArea,
     });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(!initialData);
 
     useEffect(() => {
-        // Fetch initial data
-        fetchConfig();
+        // Only fetch if we didn't get initialData from server
+        if (!initialData) {
+            fetchConfig();
+        }
 
         // Subscribe to real-time changes
         const channel = supabase
@@ -60,7 +68,7 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, []);
+    }, [initialData]);
 
     async function fetchConfig() {
         try {
@@ -72,7 +80,6 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
 
             if (error) throw error;
             if (data) {
-                // Explicitly mapping because database names are snake_case
                 setDetails({
                     businessName: data.business_name,
                     phone: data.phone,
