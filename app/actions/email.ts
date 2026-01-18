@@ -1,9 +1,9 @@
-
 "use server";
 
 import { Resend } from 'resend';
 import { EmergencyEmail } from '@/components/email/EmergencyEmail';
 import React from 'react';
+import { render } from '@react-email/render';
 
 import { siteDetails } from '@/lib/siteDetails';
 import { supabase } from '@/lib/supabase';
@@ -20,6 +20,9 @@ export async function sendEmergencyEmail(type: 'breakdown' | 'tyres' | 'jumpstar
     }
 
     try {
+        console.log(`[Email Action] Preparing to send ${type} request...`);
+        console.log(`[Email Action] API Key status: ${apiKey ? 'Present' : 'Missing'}`);
+
         // Fetch the latest email from DB
         const { data: config } = await supabase
             .from('site_config')
@@ -27,21 +30,29 @@ export async function sendEmergencyEmail(type: 'breakdown' | 'tyres' | 'jumpstar
             .eq('id', 1)
             .single();
 
-        const recipientEmail = config?.email || siteDetails.email;
+        const recipientEmail = (config?.email || siteDetails.email).trim();
+        console.log(`[Email Action] Fetching recipient from DB: ${config?.email ? 'Success' : 'Fallback used'}`);
+        console.log(`[Email Action] Sending to: ${recipientEmail}`);
+
+        // Use the official @react-email renderer which is compatible with Resend
+        const html = await render(React.createElement(EmergencyEmail, { type, data }));
 
         const { data: resData, error } = await resend.emails.send({
             from: 'Rapid Rescue <onboarding@resend.dev>',
             to: [recipientEmail],
             subject: `🚨 EMERGENCY: ${type.toUpperCase()} Request - ${data.registration || 'No Reg'}`,
-            react: React.createElement(EmergencyEmail, { type, data }),
+            html: html,
         });
 
         if (error) {
+            console.error(`[Email Action] RESEND ERROR:`, JSON.stringify(error, null, 2));
             return { success: false, error: error.message || "Failed to send email" };
         }
 
+        console.log(`[Email Action] EMAIL SENT SUCCESSFULLY! ID:`, resData?.id);
         return { success: true, data: resData };
     } catch (error: any) {
+        console.error(`[Email Action] CRITICAL ERROR:`, error);
         return { success: false, error: error.message || "An unexpected error occurred" };
     }
 }
