@@ -2,7 +2,7 @@ export const siteDetails = {
     businessName: "Rapid Rescue",
     phone: "0123 456 7890",
     whatsapp: "0123 456 7890",
-    email: "help@rapidrescue.com",
+    email: "ishikadigitalheroes@gmail.com",
     serviceArea: "London & Surrounding Areas",
     googleMapsUrl: "https://www.google.com/maps/embed?pb=...", // Placeholder
     meta: {

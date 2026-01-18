@@ -139,7 +139,7 @@ export default function DetailedContact() {
 
                                 {/* WhatsApp Button */}
                                 <a
-                                    href={`https://wa.me/${details.whatsapp.replace(/ /g, '')}`}
+                                    href={`https://wa.me/${details.whatsapp.replace(/\D/g, '')}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center justify-center p-5 md:p-6 rounded-[24px] md:rounded-[28px] bg-emerald-500 text-white hover:bg-emerald-600 transition-all duration-500 shadow-lg shadow-emerald-500/20 active:scale-95 group/wa"

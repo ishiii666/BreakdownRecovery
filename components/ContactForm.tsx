@@ -81,7 +81,7 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                 `${activeTab === 'breakdown' ? `*Drop-off:* ${formData.dropoffLocation}\n` : ''}` +
                 `${formData.issue ? `*Issue:* ${formData.issue}` : ''}`;
 
-            const phone = siteDetails.whatsapp.replace(/\s+/g, '');
+            const phone = details.whatsapp.replace(/\s+/g, '');
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
             // 3. Show Success and Redirect

@@ -17,7 +17,7 @@ export default function StickyCTA() {
                     Call Now
                 </a>
                 <a
-                    href={`https://wa.me/${details.whatsapp}`}
+                    href={`https://wa.me/${details.whatsapp.replace(/\D/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-transform"

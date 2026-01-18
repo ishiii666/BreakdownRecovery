@@ -5,10 +5,12 @@ import { Resend } from 'resend';
 import { EmergencyEmail } from '@/components/email/EmergencyEmail';
 import React from 'react';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { siteDetails } from '@/lib/siteDetails';
+import { supabase } from '@/lib/supabase';
 
 export async function sendEmergencyEmail(type: 'breakdown' | 'tyres' | 'jumpstart', data: any) {
     const apiKey = process.env.RESEND_API_KEY;
+    const resend = new Resend(apiKey);
 
     if (!apiKey || apiKey === "re_your_api_key_here") {
         return {
@@ -18,9 +20,18 @@ export async function sendEmergencyEmail(type: 'breakdown' | 'tyres' | 'jumpstar
     }
 
     try {
+        // Fetch the latest email from DB
+        const { data: config } = await supabase
+            .from('site_config')
+            .select('email')
+            .eq('id', 1)
+            .single();
+
+        const recipientEmail = config?.email || siteDetails.email;
+
         const { data: resData, error } = await resend.emails.send({
             from: 'Rapid Rescue <onboarding@resend.dev>',
-            to: ['help@rapidrescue.com'],
+            to: [recipientEmail],
             subject: `🚨 EMERGENCY: ${type.toUpperCase()} Request - ${data.registration || 'No Reg'}`,
             react: React.createElement(EmergencyEmail, { type, data }),
         });

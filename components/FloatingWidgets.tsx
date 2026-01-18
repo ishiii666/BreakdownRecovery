@@ -38,7 +38,7 @@ export default function FloatingWidgets() {
                 className="absolute bottom-6 right-4 md:right-6 pointer-events-auto"
             >
                 <a
-                    href={`https://wa.me/${details.whatsapp.replace(/ /g, '')}`}
+                    href={`https://wa.me/${details.whatsapp.replace(/\D/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="relative w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_8px_32px_rgba(37,211,102,0.4)] hover:scale-110 active:scale-95 transition-all group border border-white/20"
