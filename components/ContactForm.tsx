@@ -99,9 +99,14 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
             }
 
             // 1. Send Email (fails gracefully if API key missing)
-            const emailResult = await sendEmergencyEmail(activeTab, baseData);
-            if (!emailResult.success) {
-                console.warn("Email dispatch failed, proceeding to WhatsApp: ", emailResult.error);
+            try {
+                const emailResult = await sendEmergencyEmail(activeTab, baseData);
+                if (!emailResult.success) {
+                    console.warn("[Submission] Email dispatch failed:", emailResult.error);
+                }
+            } catch (emailError) {
+                console.error("[Submission] Email dispatch CRASHED:", emailError);
+                // We DON'T return here, because we want to proceed to WhatsApp
             }
 
             // 2. Prepare WhatsApp Message
@@ -123,6 +128,8 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
 
             // 3. Show Success and Redirect
             setSuccessTabs(prev => ({ ...prev, [activeTab]: true }));
+
+            // Redirect after a brief delay to show success state
             setTimeout(() => {
                 window.open(whatsappUrl, '_blank');
                 setIsSubmitting(false);
@@ -130,7 +137,12 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
 
         } catch (error) {
             console.error("Critical submission error:", error);
-            alert("Something went wrong. Please call us directly on " + details.phone);
+            // Even in a critical catch, try to redirect if we have the phone number
+            const phone = details.whatsapp.replace(/\s+/g, '');
+            const fallbackUrl = `https://wa.me/${phone}?text=${encodeURIComponent("🚨 Manual emergency request from website. Please assist.")}`;
+
+            alert("An error occurred while processing your request. Redirecting you to WhatsApp for immediate assistance.");
+            window.open(fallbackUrl, '_blank');
             setIsSubmitting(false);
         }
     };
