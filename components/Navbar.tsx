@@ -46,7 +46,7 @@ export default function Navbar() {
             ]
         },
         { name: "About Us", href: "/about" },
-        { name: "Contact Us", href: "#contact" },
+        { name: "Contact Us", href: "/contact" },
     ];
 
     const [isExpertiseOpen, setIsExpertiseOpen] = useState(false);
@@ -193,7 +193,7 @@ export default function Navbar() {
                                     </Link>
 
                                     <Link
-                                        href="#contact"
+                                        href="/contact"
                                         className={`text-[10px] 2xl:text-[11px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap hover:text-brand-primary ${isScrolled ? "text-white" : "text-slate-800"
                                             }`}
                                     >
@@ -314,7 +314,7 @@ export default function Navbar() {
                             {/* Contact Us */}
                             <section>
                                 <Link
-                                    href="#contact"
+                                    href="/contact"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className="block p-5 rounded-[24px] bg-white/5 border border-white/5 text-lg font-black hover:bg-brand-primary/10 hover:text-brand-primary transition-all text-center"
                                 >

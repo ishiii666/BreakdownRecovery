@@ -3,7 +3,6 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import UrgencyMarquee from '@/components/UrgencyMarquee';
-import ContactForm from '@/components/ContactForm';
 import { siteDetails } from '@/lib/siteDetails';
 import { useSite } from '@/context/SiteContext';
 import { Phone, Clock, ShieldCheck, Award, Star, ArrowRight, Zap, Users, MapPin, Gauge, Shield, History, Truck, Wrench } from 'lucide-react';
@@ -43,10 +42,6 @@ export default function AboutPage() {
             </section>
 
             <UrgencyMarquee />
-
-            <div id="emergency-form">
-                <ContactForm />
-            </div>
 
             {/* Company History / Timeline */}
             <section className="py-24 bg-white relative overflow-hidden">

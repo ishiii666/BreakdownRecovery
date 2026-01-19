@@ -16,7 +16,11 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
     const [activeTab, setActiveTab] = useState<TabType>(initialTab);
     const [isLocating, setIsLocating] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
+    const [successTabs, setSuccessTabs] = useState<Record<TabType, boolean>>({
+        breakdown: false,
+        tyres: false,
+        jumpstart: false
+    });
 
     const [formData, setFormData] = useState({
         vehicleModel: "",
@@ -38,6 +42,8 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        // Reset success state for the active tab when modified
+        setSuccessTabs(prev => ({ ...prev, [activeTab]: false }));
     };
 
     const handleLocateMe = () => {
@@ -53,6 +59,8 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
                 const loc = `${latitude.toFixed(4)}, ${longitude.toFixed(4)} (Current Location)`;
                 setFormData(prev => ({ ...prev, pickupLocation: loc }));
                 setIsLocating(false);
+                // Also reset success if location changes
+                setSuccessTabs(prev => ({ ...prev, [activeTab]: false }));
             },
             () => {
                 alert("Unable to retrieve your location");
@@ -66,26 +74,55 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
         setIsSubmitting(true);
 
         try {
+            // Filter data to only send relevant fields for the active tab
+            // Using a plain object to satisfy typical data structures
+            const baseData: Record<string, any> = {
+                registration: formData.registration,
+                phone: formData.phone,
+                pickupLocation: formData.pickupLocation,
+            };
+
+            if (activeTab === 'breakdown') {
+                baseData.vehicleModel = formData.vehicleModel;
+                baseData.passengers = formData.passengers;
+                baseData.serviceType = formData.serviceType;
+                baseData.dropoffLocation = formData.dropoffLocation;
+                baseData.drivability = formData.drivability;
+                baseData.issue = formData.issue;
+            } else if (activeTab === 'tyres') {
+                baseData.tyreSize = formData.tyreSize;
+                baseData.quantity = formData.quantity;
+                baseData.tyrePreference = formData.tyrePreference;
+                baseData.lockingWheelNut = formData.lockingWheelNut;
+            } else if (activeTab === 'jumpstart') {
+                baseData.issue = formData.issue;
+            }
+
             // 1. Send Email (fails gracefully if API key missing)
-            const emailResult = await sendEmergencyEmail(activeTab, formData);
+            const emailResult = await sendEmergencyEmail(activeTab, baseData);
             if (!emailResult.success) {
                 console.warn("Email dispatch failed, proceeding to WhatsApp: ", emailResult.error);
             }
 
             // 2. Prepare WhatsApp Message
-            const message = `🚨 *EMERGENCY ${activeTab.toUpperCase()} REQUEST*\n\n` +
-                `*Vehicle:* ${formData.vehicleModel}\n` +
-                `*Reg:* ${formData.registration}\n` +
-                `*Location:* ${formData.pickupLocation}\n` +
-                `*Phone:* ${formData.phone}\n` +
-                `${activeTab === 'breakdown' ? `*Drop-off:* ${formData.dropoffLocation}\n` : ''}` +
-                `${formData.issue ? `*Issue:* ${formData.issue}` : ''}`;
+            let message = `🚨 *EMERGENCY ${activeTab.toUpperCase()} REQUEST*\n\n`;
+            if (activeTab === 'breakdown') message += `*Vehicle:* ${formData.vehicleModel}\n`;
+            message += `*Reg:* ${formData.registration}\n`;
+            if (activeTab === 'tyres') {
+                message += `*Tyre Size:* ${formData.tyreSize}\n`;
+                message += `*Quantity:* ${formData.quantity}\n`;
+                message += `*Preference:* ${formData.tyrePreference}\n`;
+            }
+            message += `*Location:* ${formData.pickupLocation}\n`;
+            message += `*Phone:* ${formData.phone}\n`;
+            if (activeTab === 'breakdown' && formData.dropoffLocation) message += `*Drop-off:* ${formData.dropoffLocation}\n`;
+            if (formData.issue) message += `*Issue:* ${formData.issue}`;
 
             const phone = details.whatsapp.replace(/\s+/g, '');
             const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
             // 3. Show Success and Redirect
-            setIsSuccess(true);
+            setSuccessTabs(prev => ({ ...prev, [activeTab]: true }));
             setTimeout(() => {
                 window.open(whatsappUrl, '_blank');
                 setIsSubmitting(false);
@@ -480,12 +517,12 @@ export default function ContactForm({ initialTab = 'breakdown' }: { initialTab?:
 
                                     <button
                                         disabled={isSubmitting}
-                                        className={`w-full py-4 md:py-6 rounded-2xl font-black text-lg md:text-xl uppercase tracking-widest flex items-center justify-center gap-2 md:gap-3 transition-all active:scale-95 shadow-xl shadow-brand-bg-dark/10 group ${isSuccess ? "bg-emerald-500 text-white" : "bg-brand-bg-dark text-white hover:bg-brand-primary"}`}
+                                        className={`w-full py-4 md:py-6 rounded-2xl font-black text-lg md:text-xl uppercase tracking-widest flex items-center justify-center gap-2 md:gap-3 transition-all active:scale-95 shadow-xl shadow-brand-bg-dark/10 group ${successTabs[activeTab] ? "bg-emerald-500 text-white" : "bg-brand-bg-dark text-white hover:bg-brand-primary"}`}
                                     >
                                         <span className="truncate">
-                                            {isSuccess ? "✓ Request Sent!" : isSubmitting ? "Processing..." : `Submit ${activeTab === 'breakdown' ? 'Recovery' : activeTab === 'tyres' ? 'Tyre' : 'Inquiry'} Request`}
+                                            {successTabs[activeTab] ? "✓ Request Sent!" : isSubmitting ? "Processing..." : `Submit ${activeTab === 'breakdown' ? 'Recovery' : activeTab === 'tyres' ? 'Tyre' : 'Inquiry'} Request`}
                                         </span>
-                                        {!isSuccess && <ArrowRight className="w-5 h-5 md:w-6 md:h-6 shrink-0 group-hover:translate-x-1 transition-transform animate-pulse" />}
+                                        {!successTabs[activeTab] && <ArrowRight className="w-5 h-5 md:w-6 md:h-6 shrink-0 group-hover:translate-x-1 transition-transform animate-pulse" />}
                                     </button>
 
                                     <p className="text-center text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed px-4">
